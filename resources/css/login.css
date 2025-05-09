@@ -1,0 +1,16 @@
+.img-login
+{
+    position: relative;
+    width: 500px;
+    height: 200px;
+}
+
+
+body{
+    padding: 0;
+    margin: 0;
+    background-color: var(--color-body);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    overflow: hidden;
+}
+

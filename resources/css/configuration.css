@@ -1,0 +1,152 @@
+.content
+{
+    position: relative;
+    width: 100%;
+    height: 95vh;
+    padding: 20px;
+}
+
+.container-form > *
+{
+    margin-top: 1rem;
+}
+
+.logo-options
+{
+
+}
+
+.instrucciones
+{
+    color: rgb(85, 95, 106);
+}
+
+.logo-preview
+{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 200px;
+    border: 2px solid rgb(67, 67, 67);
+    border-radius: 10px;
+}
+
+
+.logo-preview img{
+    position: relative;
+    width: 300px;
+    height: 100px;
+
+}
+
+.t-option
+{
+    position: relative;
+    width: 100%;
+    height: auto;
+    background-color: white;
+    padding: 10px;
+    color: black;
+    border-radius: 10px;
+}
+
+.t-option-n
+{
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    color: black;
+    border-radius: 10px;
+}
+
+.logo-options > * {
+    margin-top: 1rem;
+}
+
+.logo-options hr{
+    color: black;
+}
+
+.color-options
+{
+    position: relative;
+    padding: 10px;
+    display: flex;
+}
+
+.option-c
+{
+    margin-left: 10%;
+    text-align: center;
+}
+
+
+label {
+    display: block;           /* Asegura que el label esté en su propia línea */
+    margin-bottom: 8px;       /* Espacio entre el label y el input */
+    font-size: 1rem;          /* Ajusta el tamaño de la fuente si es necesario */
+  }
+
+
+input[type="color"] {
+    -webkit-appearance: none;  /* Elimina el estilo predeterminado en Safari */
+    -moz-appearance: none;     /* Elimina el estilo predeterminado en Firefox */
+    appearance: none;          /* Elimina el estilo predeterminado en otros navegadores */
+    width: 40px;               /* Ajusta el tamaño del selector */
+    height: 40px;              /* Ajusta la altura */
+    border: none;              /* Elimina el borde predeterminado */
+    border-radius: 50%;        /* Haz que el input sea circular */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Sombra sutil para dar profundidad */
+    cursor: pointer;          /* Cambia el cursor para indicar interactividad */
+    background-color: transparent; /* El fondo transparente para mostrar el color */
+  }
+
+  input[type="color"]:focus {
+    outline: none;             /* Elimina el borde del enfoque predeterminado */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.8); /* Resalta cuando está en enfoque */
+  }
+
+  input[type="color"] {
+    width: 50px;               /* Ajusta el tamaño */
+    height: 50px;              /* Ajusta la altura */
+    border: 2px solid #ddd;    /* Borde sutil */
+    border-radius: 8px;        /* Bordes redondeados */
+    padding: 5px;              /* Un poco de relleno para mayor área de clic */
+    background-color: transparent; /* Fondo transparente */
+    transition: all 0.3s ease;  /* Transición suave para el enfoque */
+  }
+
+  input[type="color"]:hover {
+    border-color: #007bff;      /* Resalta el borde al pasar el mouse */
+  }
+
+  input[type="color"]:focus {
+    border-color: #0056b3;      /* Cambia el borde al hacer foco */
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.6); /* Sombra sutil al enfocar */
+  }
+
+
+
+.button {
+    position: absolute;
+    top: 10px; /* Alineado a la parte superior */
+    right: 10px; /* Alineado a la parte derecha */
+    padding: 10px 20px;
+    background-color: white;
+    color: #43545d; /* Color del texto */
+    font-size: 16px;
+    font-weight: bold;
+    border: 2px solid #ccc; /* Borde del botón */
+    border-radius: 8px; /* Bordes redondeados */
+    transition: all 0.3s ease; /* Transición para el hover */
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #dcdcdc; /* Color gris claro al hacer hover */
+    border-color: #bbb; /* Color del borde al hacer hover */
+}
+
