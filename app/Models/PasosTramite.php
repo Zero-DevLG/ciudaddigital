@@ -23,4 +23,9 @@ class PasosTramite extends Model
     {
         return $this->belongsTo(TramiteFormato::class, 'tramite_formato_id');
     }
+
+    public function campos()
+    {
+        return $this->hasMany(CampoPaso::class, 'pasos_tramite_id');
+    }
 }

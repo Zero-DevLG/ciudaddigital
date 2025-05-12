@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Tramite;
 use App\Models\TramiteFormato;
 use App\Models\PasosTramite;
+use Illuminate\Support\Str; // To generate technical names
 
 
 class TramitesCrud extends Component
@@ -147,11 +148,259 @@ class TramitesCrud extends Component
 
 
 
+    // PASOS
+
+
+
+    public $showModalContenidoPasos = false;
+    public $pasoActualId;
+
+
+
+    // Propiedades para el formulario "Agregar Nuevo Campo"
+    public $nombreCampo; // Etiqueta visible
+    public $nombreTecnicoCampo; // Nombre técnico/key
+    public $tipoCampo = 'text'; // Tipo de campo (default 'text')
+    public $opcionesCampo; // Opciones para select, radio, checkbox (string comma-separated)
+    public $infoAdicionalCampo; // Texto de ayuda/información adicional
+    public $valorPredeterminadoCampo; // Valor inicial por defecto
+    public $requeridoCampo = false; // Si el campo es obligatorio
+
+    // Array para almacenar los campos en la "vista previa" antes de guardar
+    public $camposPreview = [];
+
+    // --- Ciclo de Vida / Listeners ---
+
+    // Listener para abrir el modal desde otro componente (si es necesario)
+    // Por ejemplo, si llamas `Livewire.dispatch('openContenidoModal', { pasoId: paso.id })`
+    protected $listeners = ['openContenidoModal' => 'abrirModalContenidoPasos', 'cerrarModalContenidoPasos'];
+
+
+
+
+    public function abrirModalContenidoPasos($pasoId)
+    {
+        $this->pasoActualId = $pasoId;
+        $this->showModalContenidoPasos = true;
+    }
+
+
+    protected function rules()
+    {
+        // Reglas de validación dinámicas
+        $rules = [
+            'nombreCampo' => 'required|string|max:255',
+            'nombreTecnicoCampo' => 'nullable|string|max:255|regex:/^[a-z0-9_]+$/', // Letras minúsculas, números y guion bajo
+            'tipoCampo' => 'required|in:text,textarea,email,number,date,file,select,radio,checkbox',
+            'opcionesCampo' => '', // Validación condicional abajo
+            'infoAdicionalCampo' => 'nullable|string|max:500',
+            'valorPredeterminadoCampo' => 'nullable|string|max:500',
+            'requeridoCampo' => 'boolean',
+        ];
+
+        // Validar opciones solo si el tipo lo requiere
+        if (in_array($this->tipoCampo, ['select', 'radio', 'checkbox'])) {
+            $rules['opcionesCampo'] = 'required|string|min:1'; // Requiere opciones si es uno de estos tipos
+        } else {
+            $rules['opcionesCampo'] = 'nullable'; // Opciones no son necesarias para otros tipos
+        }
+
+
+        return $rules;
+    }
+
+    // Mensajes de validación personalizados
+    protected $messages = [
+        'nombreCampo.required' => 'La etiqueta del campo es obligatoria.',
+        'nombreCampo.max' => 'La etiqueta del campo no debe superar :max caracteres.',
+        'nombreTecnicoCampo.regex' => 'El nombre técnico solo puede contener letras minúsculas, números y guiones bajos.',
+        'tipoCampo.required' => 'Debe seleccionar un tipo de campo.',
+        'tipoCampo.in' => 'El tipo de campo seleccionado no es válido.',
+        'opcionesCampo.required' => 'Debe especificar las opciones separadas por comas para este tipo de campo.',
+        'infoAdicionalCampo.max' => 'La información adicional no debe superar :max caracteres.',
+        'valorPredeterminadoCampo.max' => 'El valor predeterminado no debe superar :max caracteres.',
+    ];
+
+
+
+    // Método para agregar un campo a la lista de vista previa
+    public function agregarCampoPreview()
+    {
+        $this->validate(); // Ejecuta las reglas de validación
+
+        // Generar nombre técnico si no se proporcionó
+        $nombreTecnico = $this->nombreTecnicoCampo ?: Str::slug($this->nombreCampo, '_');
+
+        // Asegurarse de que el nombre técnico generado no empiece con número si slugify lo crea así
+        if (preg_match('/^\d/', $nombreTecnico)) {
+            $nombreTecnico = '_' . $nombreTecnico;
+        }
+
+        // Validar que el nombre técnico generado o proporcionado no sea un duplicado en el preview
+        if (collect($this->camposPreview)->pluck('nombre_tecnico')->contains($nombreTecnico)) {
+            $this->addError('nombreTecnicoCampo', 'El nombre técnico "' . $nombreTecnico . '" ya existe en la lista de campos.');
+            return;
+        }
+
+
+        // Procesar opciones si aplican
+        $opciones = null;
+        if (in_array($this->tipoCampo, ['select', 'radio', 'checkbox'])) {
+            // Separar por comas y limpiar espacios
+            $opciones = array_map('trim', explode(',', $this->opcionesCampo));
+            // Opcional: remover opciones vacías resultantes de múltiples comas o espacios
+            $opciones = array_filter($opciones, fn($value) => !is_null($value) && $value !== '');
+        }
+
+        // Crear la estructura del nuevo campo
+        $nuevoCampo = [
+            // Usar un UUID asegura que el ID sea único y estable para wire:key
+            'id' => (string) Str::uuid(), // Genera un UUID único
+            'nombre' => $this->nombreCampo,
+            'nombre_tecnico' => $nombreTecnico,
+            'tipo' => $this->tipoCampo,
+            'opciones' => $opciones,
+            'info_adicional' => $this->infoAdicionalCampo,
+            'valorPredeterminadoCampo' => $this->valorPredeterminadoCampo, // ¡Ojo! Aquí debería ser 'valor_predeterminado' según tu Blade
+            'requerido' => (bool) $this->requeridoCampo,
+        ];
+
+
+        // Añadir el nuevo campo al array de vista previa
+        $this->camposPreview[] = $nuevoCampo;
+
+        // Emitir un mensaje de éxito
+        session()->flash('message_campos', 'Campo agregado a la lista.');
+
+        // Limpiar el formulario después de agregar
+        // $this->resetForm();
+    }
+
+
+    // Método para mover un campo hacia arriba en la lista de vista previa
+    public function moveCampoUp($index)
+    {
+        if ($index > 0) {
+            // Intercambiar el elemento actual con el anterior
+            $temp = $this->camposPreview[$index];
+            $this->camposPreview[$index] = $this->camposPreview[$index - 1];
+            $this->camposPreview[$index - 1] = $temp;
+
+            // Asegurarse de que wire:key se actualice si el ID no es estable
+            // Si usas un ID estable (como UUID generado al añadir/cargar), esto no es tan crítico
+            // Si el ID es index-based, podrías necesitar re-indexar:
+            $this->camposPreview = array_values($this->camposPreview);
+        }
+    }
+
+    // Método para mover un campo hacia abajo en la lista de vista previa
+    public function moveCampoDown($index)
+    {
+        if ($index < count($this->camposPreview) - 1) {
+            // Intercambiar el elemento actual con el siguiente
+            $temp = $this->camposPreview[$index];
+            $this->camposPreview[$index] = $this->camposPreview[$index + 1];
+            $this->camposPreview[$index + 1] = $temp;
+
+            // Re-indexar si es necesario (ver comentario en moveCampoUp)
+            $this->camposPreview = array_values($this->camposPreview);
+        }
+    }
+
+    // Método para eliminar un campo de la lista de vista previa
+    public function eliminarCampoPreview($index)
+    {
+        if (isset($this->camposPreview[$index])) {
+            unset($this->camposPreview[$index]); // Eliminar el elemento
+            $this->camposPreview = array_values($this->camposPreview); // Re-indexar el array para evitar huecos en las claves
+            session()->flash('message_campos', 'Campo eliminado de la lista.');
+        }
+    }
+
+
+    // public function eliminarCampoPreview($index)
+    // {
+    //     unset($this->camposPreview[$index]);
+    //     // Reindexar el array para evitar problemas con las claves después de eliminar un elemento.
+    //     $this->camposPreview = array_values($this->camposPreview);
+    // }
+
+    // public function moveCampoUp($index)
+    // {
+    //     if ($index > 0) {
+    //         $temp = $this->camposPreview[$index - 1];
+    //         $this->camposPreview[$index - 1] = $this->camposPreview[$index];
+    //         $this->camposPreview[$index] = $temp;
+    //     }
+    // }
+
+    // public function moveCampoDown($index)
+    // {
+    //     if ($index < count($this->camposPreview) - 1) {
+    //         $temp = $this->camposPreview[$index + 1];
+    //         $this->camposPreview[$index + 1] = $this->camposPreview[$index];
+    //         $this->camposPreview[$index] = $temp;
+    //     }
+    // }
+
+
+    // Método para guardar los campos definidos en la vista previa al Paso
+    public function guardarCamposDelPaso()
+    {
+        // Opcional: Podrías añadir una validación final aquí si la estructura completa necesita ser validada
+        // foreach($this->camposPreview as $campo) { ... validar estructura de cada campo ... }
+
+        if ($this->currentPasoId) {
+            $paso = PasosTramite::find($this->currentPasoId);
+
+            if ($paso) {
+                try {
+                    // Guardar el array de campos en la columna JSON
+                    // Si tu modelo no tiene cast para 'campos', asegúrate de hacerlo manualmente:
+                    // $paso->campos = json_encode($this->camposPreview);
+                    // Pero si tienes el cast en el modelo Paso, esto es suficiente:
+                    $paso->campos = $this->camposPreview;
+                    $paso->save();
+
+                    session()->flash('message_campos', 'Campos guardados correctamente.');
+                    // Cerrar el modal después de guardar
+                    $this->cerrarModalContenidoPasos();
+
+                    // Opcional: Emitir un evento para notificar a otros componentes que los campos se guardaron
+                    // $this->dispatch('camposDelPasoGuardados', ['pasoId' => $this->currentPasoId]);
+
+                } catch (\Exception $e) {
+                    // Manejo de errores (ej: loguear el error, mostrar un mensaje al usuario)
+                    session()->flash('message_campos', 'Error al guardar los campos: ' . $e->getMessage());
+                    // No cerrar el modal para que el usuario pueda ver el error si lo muestras en la vista
+                }
+            } else {
+                session()->flash('message_campos', 'Error: No se encontró el paso.');
+            }
+        } else {
+            session()->flash('message_campos', 'Error: ID del paso no definido.');
+        }
+    }
+
+
+
+
+    // END PASOS
+
+
+    public function updatedTipoCampo($value)
+    {
+        // Cuando el valor de tipoCampo cambie, forzar la recarga (re-render) del componente
+        $this->dispatch('render');
+    }
+
 
 
     public function mount()
     {
         $this->cargarTramites();
+
+        $this->tipoCampo = 'text';
     }
 
     public function cargarTramites()
@@ -258,17 +507,17 @@ class TramitesCrud extends Component
 
 
 
-  
+
     public $showModalpasos = false;
     public $pasos = [];
     public $titulo_paso, $descripcion, $orden, $estatus = true;
     public $pasoEditando = null;
     public $tramiteFormatoId;
 
-    
+
     public function abrirModalContenido()
     {
-        
+
         $this->resetFormpasos();
         $this->showModalpasos = true;
     }
