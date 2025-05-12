@@ -6,7 +6,9 @@ use Livewire\Component;
 use App\Models\Tramite;
 use App\Models\TramiteFormato;
 use App\Models\PasosTramite;
-use Illuminate\Support\Str; // To generate technical names
+use App\Models\CampoPaso;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 
 class TramitesCrud extends Component
@@ -169,6 +171,9 @@ class TramitesCrud extends Component
     // Array para almacenar los campos en la "vista previa" antes de guardar
     public $camposPreview = [];
 
+
+    public $currentPasoId;
+
     // --- Ciclo de Vida / Listeners ---
 
     // Listener para abrir el modal desde otro componente (si es necesario)
@@ -180,7 +185,7 @@ class TramitesCrud extends Component
 
     public function abrirModalContenidoPasos($pasoId)
     {
-        $this->pasoActualId = $pasoId;
+        $this->currentPasoId = $pasoId;
         $this->showModalContenidoPasos = true;
     }
 
@@ -344,41 +349,41 @@ class TramitesCrud extends Component
     // }
 
 
-    // Método para guardar los campos definidos en la vista previa al Paso
     public function guardarCamposDelPaso()
     {
-        // Opcional: Podrías añadir una validación final aquí si la estructura completa necesita ser validada
-        // foreach($this->camposPreview as $campo) { ... validar estructura de cada campo ... }
-
         if ($this->currentPasoId) {
-            $paso = PasosTramite::find($this->currentPasoId);
+            // Puedes añadir una validación final aquí si es necesario
 
-            if ($paso) {
-                try {
-                    // Guardar el array de campos en la columna JSON
-                    // Si tu modelo no tiene cast para 'campos', asegúrate de hacerlo manualmente:
-                    // $paso->campos = json_encode($this->camposPreview);
-                    // Pero si tienes el cast en el modelo Paso, esto es suficiente:
-                    $paso->campos = $this->camposPreview;
-                    $paso->save();
+            DB::transaction(function () {
+                // 1. Eliminar todos los campos existentes para este paso
+                CampoPaso::where('pasos_tramite_id', $this->currentPasoId)->delete();
 
-                    session()->flash('message_campos', 'Campos guardados correctamente.');
-                    // Cerrar el modal después de guardar
-                    $this->cerrarModalContenidoPasos();
-
-                    // Opcional: Emitir un evento para notificar a otros componentes que los campos se guardaron
-                    // $this->dispatch('camposDelPasoGuardados', ['pasoId' => $this->currentPasoId]);
-
-                } catch (\Exception $e) {
-                    // Manejo de errores (ej: loguear el error, mostrar un mensaje al usuario)
-                    session()->flash('message_campos', 'Error al guardar los campos: ' . $e->getMessage());
-                    // No cerrar el modal para que el usuario pueda ver el error si lo muestras en la vista
+                // 2. Crear nuevos registros en la tabla 'campo_pasos' para cada campo en la vista previa
+                foreach ($this->camposPreview as $index => $campo) {
+                    CampoPaso::create([
+                        'pasos_tramite_id' => $this->currentPasoId,
+                        'nombre_campo' => $campo['nombre'], // Mapear de preview a DB
+                        'nombre_tecnico' => $campo['nombre_tecnico'], // Mapear
+                        'tipo' => $campo['tipo'], // Mapear
+                        'requerido' => $campo['requerido'], // Mapear
+                        'opciones' => $campo['opciones'], // Mapear (Eloquent cast JSON)
+                        'info_adicional' => $campo['info_adicional'] ?? null, // Mapear (puede ser null)
+                        'valor_predeterminado' => $campo['valor_predeterminado'] ?? null, // Mapear (puede ser null)
+                        // 'orden' => $index, // Opcional: Si añades una columna de orden
+                    ]);
                 }
-            } else {
-                session()->flash('message_campos', 'Error: No se encontró el paso.');
-            }
+            });
+
+
+            session()->flash('message_campos', 'Campos guardados correctamente.');
+            // Cerrar el modal después de guardar
+            $this->cerrarModalContenidoPasos();
+
+            // Opcional: Emitir un evento para notificar a otros componentes
+            // $this->dispatch('camposDelPasoGuardados', ['pasoId' => $this->currentPasoId]);
+
         } else {
-            session()->flash('message_campos', 'Error: ID del paso no definido.');
+            session()->flash('message_campos', 'Error: ID del paso no definido al intentar guardar.');
         }
     }
 
