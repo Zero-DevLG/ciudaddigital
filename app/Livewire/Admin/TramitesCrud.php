@@ -407,6 +407,41 @@ class TramitesCrud extends Component
 
     // END PASOS
 
+
+    // Vista Tramite
+    public $formatoId;
+    public $pasos_tramite = [];
+    public $indicePasoActual = 0;
+    public $mostrarModalPasosSecuenciales = false;
+
+    public function abrirModalSecuencial($formatoId)
+    {
+        $this->formatoId = $formatoId;
+
+        // Cargar los pasos del trámite con sus campos
+        $this->pasos_tramite = PasosTramite::with('campos') // Asegúrate de tener relación definida
+            ->where('tramite_formato_id', $formatoId)
+            ->orderBy('orden')
+            ->get();
+
+        $this->indicePasoActual = 0;
+        $this->mostrarModalPasosSecuenciales = true;
+    }
+
+    public function pasoSiguiente()
+    {
+        if ($this->indicePasoActual < count($this->pasos) - 1) {
+            $this->indicePasoActual++;
+        }
+    }
+
+    public function pasoAnterior()
+    {
+        if ($this->indicePasoActual > 0) {
+            $this->indicePasoActual--;
+        }
+    }
+
     
 
     public function updatedTipoCampo($value)

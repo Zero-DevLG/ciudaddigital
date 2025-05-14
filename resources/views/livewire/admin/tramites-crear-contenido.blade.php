@@ -31,8 +31,20 @@
         <h2 class="text-2xl font-bold mb-4">Pasos de formato: {{ $formato->nombre_formato }}</h2>
 
         <div class="flex justify-end mb-4">
+              <button wire:click="abrirModalSecuencial({{ $formato->id }})" class="bg-blue-600 text-white px-4 py-2 rounded mr-1 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Visualizar trámite
+            </button>
+              <button wire:click="abrirModalContenido" class="bg-blue-600 text-white px-4 py-2 rounded mr-1">
+                + Agregar reglas
+            </button>
             <button wire:click="abrirModalContenido" class="bg-green-600 text-white px-4 py-2 rounded">
-                Nuevo Paso
+                + Nuevo Paso
             </button>
         </div>
 
@@ -55,9 +67,10 @@
                             <td class="border p-2">{{ $paso->descripcion }}</td>
                             <td class="border p-2">{{ $paso->estatus ? 'Activo' : 'Inactivo' }}</td>
                             <td class="border p-2 flex gap-2">
-                                <button wire:click="abrirModalVistaPaso({{ $paso->id }})">Ver paso</button>
-                                <button wire:click="abrirModalContenidoPasos({{ $paso->id }})">Crear contenido del
-                                    paso
+                                <button wire:click="abrirModalVistaPaso({{ $paso->id }})" class="text-green-600 hover:underline">Ver contenido del paso</button>
+                                <button wire:click="abrirModalContenidoPasos({{ $paso->id }})"
+                                    @if($paso->campos && $paso->campos->count() > 0) disabled class="opacity-50 cursor-not-allowed" @endif>
+                                    Crear contenido del paso
                                 </button>
                                 <button wire:click="editarPaso({{ $paso->id }})"
                                     class="text-blue-600 hover:underline">Editar</button>
@@ -80,21 +93,54 @@
             {{-- Modal Vista Paso --}}
 @if($ModalVistaPaso)
 <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div class="bg-white w-full max-w-5xl rounded-2xl shadow-lg overflow-hidden">
+    <div class="bg-white w-full max-w-5xl rounded-2xl shadow-xl overflow-hidden">
+        
         <!-- Encabezado -->
-        <div class="bg-green-600 text-white px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-bold">📝 Vista previa del paso</h2>
-            <button wire:click="$set('ModalVistaPaso', false)" class="text-white hover:text-gray-300 text-2xl">&times;</button>
+        <div class="bg-gray-900 text-white px-6 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-semibold flex items-center gap-2">
+                📝 Vista previa del paso
+            </h2>
+            <button wire:click="$set('ModalVistaPaso', false)" class="text-white hover:text-gray-300 text-2xl font-light">&times;</button>
         </div>
 
+       <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md mb-4">
+    <p class="font-semibold text-sm md:text-base">
+        📌 Esta es una <span class="underline">vista previa</span> del formulario que verá el usuario solicitante para completar el proceso del trámite.
+    </p>
+    <p class="mt-2 text-sm md:text-base">
+        ⚠️ Para generar un nuevo contenido en este paso, primero debes eliminar el contenido actual.
+    </p>
+</div>
+
+
         <!-- Contenido -->
-        <div class="p-6 max-h-[80vh] overflow-y-auto bg-gray-50">
-            @if($camposPasoSeleccionado && count($camposPasoSeleccionado) > 0)
-                <form>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-6 max-h-[80vh] overflow-y-auto bg-gray-50 relative">
+
+            <!-- Logo en esquina superior izquierda -->
+            <div class=" top-6 left-6">
+                <img src="{{ asset(app(App\Services\ConfigService::class)->get('logo', 'img/default.png')) }}"
+                     alt="Logo"
+                     class="w-24 h-auto object-contain">
+            </div>
+
+            <hr>
+
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-1">
+                {{ $paso->titulo_paso }}
+            </h1>
+            <p class="text-gray-600 text-sm md:text-base">
+                {{ $paso->descripcion }}
+            </p>
+        </div>
+
+
+            <div class="mt-20 space-y-6">
+                @if($camposPasoSeleccionado && count($camposPasoSeleccionado) > 0)
+                    <form class="space-y-6">
                         @foreach($camposPasoSeleccionado as $campo)
-                            <div class="space-y-1">
-                                <label class="block font-semibold text-gray-700">
+                            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-5 hover:shadow-md transition">
+                                <label class="block text-gray-700 font-medium mb-2">
                                     {{ $campo->nombre_campo }}
                                     @if($campo->requerido)
                                         <span class="text-red-500">*</span>
@@ -103,19 +149,23 @@
 
                                 @switch($campo->tipo)
                                     @case('text')
-                                        <input type="text" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+                                        <input type="text"
+                                               class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400">
                                         @break
 
                                     @case('date')
-                                        <input type="date" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+                                        <input type="date"
+                                               class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400">
                                         @break
 
                                     @case('file')
-                                        <input type="file" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+                                        <input type="file"
+                                               class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400">
                                         @break
 
                                     @case('select')
-                                        <select class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+                                        <select
+                                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400">
                                             <option value="">-- Selecciona --</option>
                                             @foreach(json_decode($campo->opciones ?? '[]', true) as $opcion)
                                                 <option value="{{ $opcion }}">{{ $opcion }}</option>
@@ -124,34 +174,117 @@
                                         @break
 
                                     @default
-                                        <input type="text" class="w-full border rounded-lg px-4 py-2">
+                                        <input type="text"
+                                               class="w-full border border-gray-300 rounded-lg px-4 py-2">
                                 @endswitch
                             </div>
                         @endforeach
+                    </form>
+                @else
+                    <div class="text-center text-gray-500 py-10">
+                        <p class="text-lg">No hay campos configurados aún para este paso.</p>
                     </div>
-                </form>
-            @else
-                <div class="text-center text-gray-500 py-6">
-                    <p>No hay campos configurados aún para este paso.</p>
-                </div>
-            @endif
+                @endif
+            </div>
         </div>
 
         <!-- Pie -->
-        <div class="bg-gray-100 px-6 py-4 text-right">
-            <button wire:click="$set('ModalVistaPaso', false)" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
-                Cerrar
+        <div class="bg-gray-100 px-6 py-4 flex justify-end">
+
+            <button wire:click="eliminarContenidoPaso({{ $paso->id }})" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg transition mr-2">
+                Eliminar contenido </button>
+        </div>
+    </div>
+</div>
+@endif
+        @endif
+
+
+        @if ($mostrarModalPasosSecuenciales)
+<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white w-full max-w-3xl rounded-2xl shadow-lg overflow-hidden relative">
+        
+        <!-- Header con logo -->
+        <div class="flex items-center justify-between p-4 border-b bg-gray-100">
+            <div class="flex items-center gap-4">
+                <img src="{{ asset(app(App\Services\ConfigService::class)->get('logo', 'img/default.png')) }}"
+                    alt="Logo" class="w-12 h-12 object-contain">
+                <h2 class="text-xl font-bold text-gray-800">Paso {{ $indicePasoActual + 1 }} de {{ count($pasos) }}</h2>
+            </div>
+            <button wire:click="$set('mostrarModalPasosSecuenciales', false)" class="text-gray-600 hover:text-red-500 text-2xl">
+                &times;
+            </button>
+        </div>
+
+        <!-- Contenido del paso -->
+        <div class="p-6 bg-gray-50 max-h-[75vh] overflow-y-auto space-y-4">
+            @if(isset($pasos[$indicePasoActual]))
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ $pasos[$indicePasoActual]->titulo_paso }}</h3>
+                    <p class="text-gray-600 mb-4">{{ $pasos[$indicePasoActual]->descripcion }}</p>
+
+                    <form>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            @foreach($pasos[$indicePasoActual]->campos as $campo)
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-1">
+                                        {{ $campo->nombre_campo }}
+                                        @if($campo->requerido)
+                                            <span class="text-red-500">*</span>
+                                        @endif
+                                    </label>
+                                    
+                                    @switch($campo->tipo)
+                                        @case('text')
+                                            <input type="text" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                                            @break
+                                        @case('date')
+                                            <input type="date" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                                            @break
+                                        @case('file')
+                                            <input type="file" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                                            @break
+                                        @case('select')
+                                            <select class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                                                <option value="">-- Selecciona --</option>
+                                                @foreach(json_decode($campo->opciones ?? '[]', true) as $opcion)
+                                                    <option value="{{ $opcion }}">{{ $opcion }}</option>
+                                                @endforeach
+                                            </select>
+                                            @break
+                                        @default
+                                            <input type="text" class="w-full border rounded-lg px-3 py-2">
+                                    @endswitch
+                                </div>
+                            @endforeach
+                        </div>
+                    </form>
+                </div>
+            @else
+                <p class="text-center text-gray-500">No hay información para mostrar.</p>
+            @endif
+        </div>
+
+        <!-- Footer con navegación -->
+        <div class="bg-gray-100 px-6 py-4 flex justify-between items-center">
+            <button wire:click="pasoAnterior"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded disabled:opacity-50"
+                @if($indicePasoActual === 0) disabled @endif>
+                ← Anterior
+            </button>
+
+            <button wire:click="pasoSiguiente"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded disabled:opacity-50"
+                @if($indicePasoActual === count($pasos) - 1) disabled @endif>
+                Siguiente →
             </button>
         </div>
     </div>
 </div>
 @endif
-   
 
 
 
-
-        @endif
 
         {{-- Modal --}}
         @if ($showModalpasos)
