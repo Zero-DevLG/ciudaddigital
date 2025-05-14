@@ -189,6 +189,11 @@ class TramitesCrud extends Component
         $this->showModalContenidoPasos = true;
     }
 
+    public function cerrarModalContenidoPasos()
+    {
+        $this->showModalContenidoPasos = false;
+    }
+
 
     protected function rules()
     {
@@ -387,11 +392,22 @@ class TramitesCrud extends Component
         }
     }
 
+    // Vista previa Pasos
+
+    public $ModalVistaPaso = false;
+    public $camposPasoSeleccionado = [];
+
+    public function abrirModalVistaPaso($pasoId)
+    {   
+        $this->camposPasoSeleccionado = CampoPaso::where('pasos_tramite_id', $pasoId)->get();
+        $this->ModalVistaPaso = true;
+    }
 
 
 
     // END PASOS
 
+    
 
     public function updatedTipoCampo($value)
     {

@@ -55,6 +55,7 @@
                             <td class="border p-2">{{ $paso->descripcion }}</td>
                             <td class="border p-2">{{ $paso->estatus ? 'Activo' : 'Inactivo' }}</td>
                             <td class="border p-2 flex gap-2">
+                                <button wire:click="abrirModalVistaPaso({{ $paso->id }})">Ver paso</button>
                                 <button wire:click="abrirModalContenidoPasos({{ $paso->id }})">Crear contenido del
                                     paso
                                 </button>
@@ -72,6 +73,85 @@
                 @endif
             </tbody>
         </table>
+
+        <!-- Modal vista paso -->
+
+        @if($ModalVistaPaso)
+            {{-- Modal Vista Paso --}}
+@if($ModalVistaPaso)
+<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white w-full max-w-5xl rounded-2xl shadow-lg overflow-hidden">
+        <!-- Encabezado -->
+        <div class="bg-green-600 text-white px-6 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-bold">📝 Vista previa del paso</h2>
+            <button wire:click="$set('ModalVistaPaso', false)" class="text-white hover:text-gray-300 text-2xl">&times;</button>
+        </div>
+
+        <!-- Contenido -->
+        <div class="p-6 max-h-[80vh] overflow-y-auto bg-gray-50">
+            @if($camposPasoSeleccionado && count($camposPasoSeleccionado) > 0)
+                <form>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @foreach($camposPasoSeleccionado as $campo)
+                            <div class="space-y-1">
+                                <label class="block font-semibold text-gray-700">
+                                    {{ $campo->nombre_campo }}
+                                    @if($campo->requerido)
+                                        <span class="text-red-500">*</span>
+                                    @endif
+                                </label>
+
+                                @switch($campo->tipo)
+                                    @case('text')
+                                        <input type="text" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+                                        @break
+
+                                    @case('date')
+                                        <input type="date" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+                                        @break
+
+                                    @case('file')
+                                        <input type="file" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+                                        @break
+
+                                    @case('select')
+                                        <select class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+                                            <option value="">-- Selecciona --</option>
+                                            @foreach(json_decode($campo->opciones ?? '[]', true) as $opcion)
+                                                <option value="{{ $opcion }}">{{ $opcion }}</option>
+                                            @endforeach
+                                        </select>
+                                        @break
+
+                                    @default
+                                        <input type="text" class="w-full border rounded-lg px-4 py-2">
+                                @endswitch
+                            </div>
+                        @endforeach
+                    </div>
+                </form>
+            @else
+                <div class="text-center text-gray-500 py-6">
+                    <p>No hay campos configurados aún para este paso.</p>
+                </div>
+            @endif
+        </div>
+
+        <!-- Pie -->
+        <div class="bg-gray-100 px-6 py-4 text-right">
+            <button wire:click="$set('ModalVistaPaso', false)" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+@endif
+   
+
+
+
+
+        @endif
 
         {{-- Modal --}}
         @if ($showModalpasos)
