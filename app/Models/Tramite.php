@@ -51,6 +51,7 @@ class Tramite extends Model
         );
     }
 
+
     // public function reglasEspeciales()
     // {
     //     return $this->hasMany(ReglaTramite::class);

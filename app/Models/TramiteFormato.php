@@ -28,4 +28,11 @@ class TramiteFormato extends Model
     {
         return $this->hasMany(PasosTramite::class, 'tramite_formato_id');
     }
+
+    public function instancias()
+    {
+        return $this->hasMany(InstanciaTramite::class);
+    }
+
+
 }

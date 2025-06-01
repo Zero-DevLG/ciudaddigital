@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 
+use Livewire\Livewire;
+
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -33,3 +36,9 @@ route::post('/configuracion/save', [ConfigurationController::class, 'saveConfig'
 // Validar CURP RENAPO
 
 Route::post('/validar-curp', [App\Http\Controllers\CurpController::class, 'validar'])->name('validar.curp');
+
+
+// Cargar tramite
+Route::get('/tramite/{tramite}', function ($tramite) {
+    return view('tramite.iniciar', ['tramite' => $tramite]);
+})->name('tramite.iniciar')->middleware('auth');
