@@ -3,6 +3,7 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 
 import $ from 'jquery';
+window.$ = window.jQuery = $;
 
 import Swal from 'sweetalert2';
 
