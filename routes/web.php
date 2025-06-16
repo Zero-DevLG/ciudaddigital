@@ -39,6 +39,6 @@ Route::post('/validar-curp', [App\Http\Controllers\CurpController::class, 'valid
 
 
 // Cargar tramite
-Route::get('/tramite/{tramite}', function ($tramite) {
-    return view('tramite.iniciar', ['tramite' => $tramite]);
-})->name('tramite.iniciar')->middleware('auth');
+Route::get('/tramite/{id}', [App\Http\Controllers\TramitesController::class, 'iniciar'])
+    ->name('tramite.iniciar')
+    ->middleware('auth');

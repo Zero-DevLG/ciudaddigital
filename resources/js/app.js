@@ -23,3 +23,9 @@ window.jQuery = $;
 window.Alpine = Alpine;
 
 Alpine.start();
+
+
+window.inicializarMapa = function() {
+    console.log('Mapa inicializado!');
+    // Aquí pones la lógica para crear o refrescar tu mapa, e.g. Leaflet, Google Maps, etc.
+}
