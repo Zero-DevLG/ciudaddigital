@@ -1,5 +1,6 @@
 <div>
-    <div class="space-y-10 max-w-5xl mx-auto p-4 bg-white rounded shadow">
+    {{ $tramiteId }}
+    <div class="">
         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Información del Predio</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -12,6 +13,81 @@
                     <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
                 @enderror
             </div>
+
+            <!-- Dirección del predio -->
+
+            <div class="col-span-1 md:col-span-3">
+                <h2 class="text-xl font-semibold text-gray-800 mt-8 mb-4">Dirección del Predio</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Estado -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Estado</label>
+                        <input type="text" wire:model.defer="estado"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                        @error('estado')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Delegación o Municipio -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Delegación / Municipio</label>
+                        <input type="text" wire:model.defer="delegacion_municipio"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                        @error('delegacion_municipio')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Código Postal -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Código Postal</label>
+                        <input type="text" wire:model.defer="cp"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            maxlength="5" />
+                        @error('cp')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Calle -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Calle</label>
+                        <input type="text" wire:model.defer="calle"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                        @error('calle')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Número exterior -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Número Exterior</label>
+                        <input type="text" wire:model.defer="n_exterior"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                        @error('n_exterior')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Número interior -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Número Interior</label>
+                        <input type="text" wire:model.defer="n_interior"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                        @error('n_interior')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+
 
             <!-- Mapa -->
             <div class="col-span-1 md:col-span-2">
@@ -88,7 +164,7 @@
                 @enderror
             </div>
         </div>
-
+        <hr>
         <!-- Checkbox acceso y zona -->
 
         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Accesibilidad</h2>

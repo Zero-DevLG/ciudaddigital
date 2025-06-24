@@ -1,7 +1,7 @@
 <div>
     {{-- If you look to others for fulfillment, you will never truly be fulfilled. --}}
 
-    <div class="p-6 bg-white rounded shadow-md space-y-6">
+    <div>
         <h2 class="text-xl font-semibold text-gray-800">Datos personales del solicitante</h2>
         <hr>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -58,11 +58,7 @@
             </div>
         </div>
 
-        <div class="flex justify-end pt-4">
-            <button wire:click="guardar" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                Guardar
-            </button>
-        </div>
+
     </div>
 
 

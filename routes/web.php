@@ -38,7 +38,12 @@ route::post('/configuracion/save', [ConfigurationController::class, 'saveConfig'
 Route::post('/validar-curp', [App\Http\Controllers\CurpController::class, 'validar'])->name('validar.curp');
 
 
-// Cargar tramite
+// Iniciar tramite
 Route::get('/tramite/{id}', [App\Http\Controllers\TramitesController::class, 'iniciar'])
     ->name('tramite.iniciar')
+    ->middleware('auth');
+
+// Retomar tramite
+
+Route::get('/tramites/uso-suelo/{tramite}', [App\Http\Controllers\TramitesController::class, 'mostrarTramite'])->name('tramites.uso_suelo')
     ->middleware('auth');
