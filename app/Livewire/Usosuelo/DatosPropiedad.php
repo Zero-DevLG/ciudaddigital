@@ -171,7 +171,7 @@ class DatosPropiedad extends Component
             ]);
 
             // Crear nuevo predio
-            Predio::create([
+            $predioC = Predio::create([
                 'domicilio_id' => $domicilio->id,
                 'clave_catastral' => $this->clave_catastral,
                 'lat' => $this->latitud,
@@ -185,6 +185,15 @@ class DatosPropiedad extends Component
                 'zona_urbana' => $this->zona_urbana,
             ]);
         }
+
+        #Crear la relacion predio tramite
+        if (!$this->predioTramite) {
+            PropiedadTramite::create([
+                'propiedad_id' => $predioC->id,
+                'tramite_id' => $this->tramiteId,
+            ]);
+        }
+
 
         $this->dispatch('siguientePaso');
     }

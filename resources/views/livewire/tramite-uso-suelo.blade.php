@@ -17,7 +17,7 @@
         @elseif ($pasoActual === 1)
             <livewire:usosuelo.datos-propiedad :tramiteId="$tramiteId" />
         @elseif ($pasoActual === 2)
-            <livewire:usosuelo.confirmacion />
+            <livewire:caracteristicas_proyecto :tramiteId="$tramiteId" />
         @endif
 
 
