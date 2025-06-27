@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CatalogoEstatus;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,7 +16,11 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $this->call(ConfigurationSeeder::class);
+        $this->call(
+            ConfigurationSeeder::class,
+            TiposTramiteSeeder::class,
+            // Add other seeders here as needed
+        );
 
         User::factory()->create([
             'name' => 'Test User',

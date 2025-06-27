@@ -13,10 +13,13 @@
             <livewire:dashboard.side-menu-user />
         </div>
 
-        {{-- Contenido principal con scroll si es necesario --}}
-        <div class="flex-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow ml-4 overflow-y-auto">
-             <livewire:tramite-wizard :tramite="$tramite" />
-        </div>
+        {{-- Contenido principal con scroll si es necesario (tramite buider en construccion) --}}
+        {{-- <div class="flex-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow ml-4 overflow-y-auto">
+            <livewire:tramite-wizard :tramite="$tramite" />
+        </div> --}}
+
+
+
 
     </div>
 </x-app-layout>

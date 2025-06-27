@@ -13,6 +13,7 @@
             <livewire:dashboard.side-menu-user />
         </div>
 
+
         {{-- Contenido principal con scroll si es necesario --}}
         <div class="flex-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow ml-4 overflow-y-auto">
             <livewire:tramites-disponibles />

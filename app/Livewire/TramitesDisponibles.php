@@ -2,9 +2,9 @@
 
 namespace App\Livewire;
 
-
+use App\Models\TipoTramite;
 use Livewire\Component;
-use App\Models\Tramite;
+use App\Models\TramiteC;
 
 class TramitesDisponibles extends Component
 {
@@ -13,8 +13,7 @@ class TramitesDisponibles extends Component
 
     public  function mount()
     {
-        $this->tramites = Tramite::all();
-
+        $this->tramites = TipoTramite::all();
     }
 
 

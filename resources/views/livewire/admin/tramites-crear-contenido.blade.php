@@ -94,7 +94,7 @@
 @if($ModalVistaPaso)
 <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
     <div class="bg-white w-full max-w-5xl rounded-2xl shadow-xl overflow-hidden">
-        
+
         <!-- Encabezado -->
         <div class="bg-gray-900 text-white px-6 py-4 flex justify-between items-center">
             <h2 class="text-xl font-semibold flex items-center gap-2">
@@ -203,7 +203,7 @@
         @if ($mostrarModalPasosSecuenciales)
 <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
     <div class="bg-white w-full max-w-3xl rounded-2xl shadow-lg overflow-hidden relative">
-        
+
         <!-- Header con logo -->
         <div class="flex items-center justify-between p-4 border-b bg-gray-100">
             <div class="flex items-center gap-4">
@@ -233,7 +233,7 @@
                                             <span class="text-red-500">*</span>
                                         @endif
                                     </label>
-                                    
+
                                     @switch($campo->tipo)
                                         @case('text')
                                             <input type="text" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
@@ -649,10 +649,7 @@
                 </div>
             </div>
 
-            {{-- Add AlpineJS for the modal transitions if not already included globally --}}
-            {{-- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script> --}}
 
-            {{-- Basic CSS for form elements (if not using Tailwind Forms plugin or similar) --}}
             <style>
                 .form-input,
                 .form-select,
