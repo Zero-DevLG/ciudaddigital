@@ -18,6 +18,8 @@
             <livewire:usosuelo.datos-propiedad :tramiteId="$tramiteId" />
         @elseif ($pasoActual === 2)
             <livewire:caracteristicas_proyecto :tramiteId="$tramiteId" />
+        @elseif ($pasoActual === 3)
+            <livewire:documentacion-solicitante-form :tramiteId="$tramiteId" />
         @endif
 
 

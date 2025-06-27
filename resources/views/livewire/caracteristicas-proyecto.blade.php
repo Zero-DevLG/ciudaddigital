@@ -33,10 +33,19 @@
                     </select>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Subir plano o croquis del terreno</label>
-                    <input type="file" wire:model="plano" class="w-full" />
-                </div>
+                {{-- Plano --}}
+<div>
+    <label class="block text-sm font-medium text-gray-700">Plano o croquis del terreno</label>
+
+    @if ($planoExistente)
+        <p class="text-green-600 text-sm">
+            Ya se cargó un archivo: <a href="{{ Storage::url($planoExistente) }}" target="_blank" class="underline">Ver archivo</a>
+        </p>
+    @else
+        <input type="file" wire:model="plano" class="w-full" />
+        @error('plano') <span class="text-sm text-red-500">{{ $message }}</span> @enderror
+    @endif
+</div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Tipo de construcción proyectada</label>
@@ -67,11 +76,19 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Estudio de impacto ambiental (PDF,
-                        opcional)</label>
-                    <input type="file" wire:model="estudio_impacto" class="w-full" />
-                </div>
+               {{-- Estudio de Impacto Ambiental --}}
+<div>
+    <label class="block text-sm font-medium text-gray-700">Estudio de impacto ambiental (PDF, opcional)</label>
+
+    @if ($estudioImpactoExistente)
+        <p class="text-green-600 text-sm">
+            Ya se cargó un archivo: <a href="{{ Storage::url($estudioImpactoExistente) }}" target="_blank" class="underline">Ver archivo</a>
+        </p>
+    @else
+        <input type="file" wire:model="estudio_impacto" class="w-full" />
+        @error('estudio_impacto') <span class="text-sm text-red-500">{{ $message }}</span> @enderror
+    @endif
+</div>
 
             </div>
         @endif

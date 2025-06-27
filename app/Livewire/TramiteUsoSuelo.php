@@ -19,6 +19,7 @@ class TramiteUsoSuelo extends Component
         ['titulo' => 'Datos del Solicitante', 'descripcion' => 'Introduce la información del solicitante.'],
         ['titulo' => 'Datos de la Propiedad', 'descripcion' => 'Proporciona los datos de la propiedad.'],
         ['titulo' => 'Confirmación', 'descripcion' => 'Revisa y confirma los datos.'],
+         ['titulo' => 'Confirmación', 'descripcion' => 'Revisa y confirma los datos.'],
     ];
 
 

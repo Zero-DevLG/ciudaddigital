@@ -1,11 +1,14 @@
 import './bootstrap';
-import './register.js';
+
 
 
 import Alpine from 'alpinejs';
 
 import $ from 'jquery';
-window.$ = window.jQuery = $;
+window.$ = $;
+window.jQuery = $;
+
+
 
 import Swal from 'sweetalert2';
 
@@ -15,10 +18,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './register.js';
 
 window.Swal = Swal;
-
-
-window.$ = $;
-window.jQuery = $;
 
 window.Alpine = Alpine;
 

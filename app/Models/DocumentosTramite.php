@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DocumentoTramite extends Model
+class DocumentosTramite extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'documentos_tramite';
+    protected $table = 'documentos_tramites';
 
     protected $fillable = [
         'tramite_id',
