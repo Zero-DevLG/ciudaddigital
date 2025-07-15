@@ -24,6 +24,29 @@ class Predio extends Model
         'zona_urbana',
     ];
 
+    //relacion con domicilio
+    public function domicilio()
+    {
+        return $this->belongsTo(Domicilios::class, 'domicilio_id');
+    }
+
+    //relacion con tipo de propiedad
+    public function tipoPropiedad()
+    {
+        return $this->belongsTo(CatalogoPropiedad::class, 'tipo_propiedad_id');
+    }
+
+    //relacion con uso actual del suelo
+    public function usoActual()
+    {
+        return $this->belongsTo(CatalogoUsoSuelo::class, 'uso_actual_suelo_id');
+    }
+    //relacion con uso solicitado del suelo
+    public function usoSolicitado()
+    {
+        return $this->belongsTo(CatalogoUsoSuelo::class, 'uso_solicitado_id');
+    }
+
     // Relaciones (opcional, si las necesitas)
     // public function domicilio()
     // {

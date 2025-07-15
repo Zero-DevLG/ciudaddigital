@@ -40,6 +40,8 @@
     @if ($planoExistente)
         <p class="text-green-600 text-sm">
             Ya se cargó un archivo: <a href="{{ Storage::url($planoExistente) }}" target="_blank" class="underline">Ver archivo</a>
+               <input type="file" wire:model="plano" class="w-full" />
+        @error('plano') <span class="text-sm text-red-500">{{ $message }}</span> @enderror
         </p>
     @else
         <input type="file" wire:model="plano" class="w-full" />
@@ -83,6 +85,8 @@
     @if ($estudioImpactoExistente)
         <p class="text-green-600 text-sm">
             Ya se cargó un archivo: <a href="{{ Storage::url($estudioImpactoExistente) }}" target="_blank" class="underline">Ver archivo</a>
+             <input type="file" wire:model="estudio_impacto" class="w-full" />
+        @error('estudio_impacto') <span class="text-sm text-red-500">{{ $message }}</span> @enderror
         </p>
     @else
         <input type="file" wire:model="estudio_impacto" class="w-full" />

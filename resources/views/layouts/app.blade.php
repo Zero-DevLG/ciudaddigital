@@ -28,7 +28,7 @@
 
 </head>
 
-<body class="font-sans antialiased">
+<body>
     <div class="min-h-screen bg-gray-100 dark:bg-gray-100">
         @include('layouts.navigation')
 
@@ -49,6 +49,8 @@
 
     @livewireScripts
     @stack('scripts') <!-- <- IMPORTANTE -->
+
+</div>
 </body>
 
 </html>

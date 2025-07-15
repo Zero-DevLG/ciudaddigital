@@ -10,6 +10,7 @@ class TramiteUsoSuelo extends Component
 
     public int $pasoActual = 0;
     public int $tramiteId = 0;
+    public int $tramite_estatus;
     public $listeners = [
         'siguientePaso',
     ];
@@ -20,6 +21,7 @@ class TramiteUsoSuelo extends Component
         ['titulo' => 'Datos de la Propiedad', 'descripcion' => 'Proporciona los datos de la propiedad.'],
         ['titulo' => 'Confirmación', 'descripcion' => 'Revisa y confirma los datos.'],
          ['titulo' => 'Confirmación', 'descripcion' => 'Revisa y confirma los datos.'],
+          ['titulo' => 'Confirmación', 'descripcion' => 'Revisa y confirma los datos.']
     ];
 
 
@@ -34,6 +36,8 @@ class TramiteUsoSuelo extends Component
     {
         if ($this->pasoActual < count($this->pasos) - 1) {
             $this->pasoActual++;
+            // Guardamos el paso actual en la sesión
+            session(['pasoActual' => $this->pasoActual]);
             $this->dispatch('pasoCambiado', $this->pasoActual);
         }
 
@@ -46,6 +50,8 @@ class TramiteUsoSuelo extends Component
     {
         if ($this->pasoActual > 0) {
             $this->pasoActual--;
+            // Guardamos el paso actual en la sesión
+            session(['pasoActual' => $this->pasoActual]);
             $this->dispatch('pasoCambiado', $this->pasoActual);
         }
     }
@@ -53,7 +59,12 @@ class TramiteUsoSuelo extends Component
     public function mount($tramite, $tramiteTipo, $pasosPuntero)
     {
 
+
         $this->tramiteId = $tramite->id;
+
+        $this->tramite_estatus = $tramite->cat_estatus_id;
+
+        $this->pasoActual = session('pasoActual', 0);
 
         // Emitimos el paso inicial para que el JS ejecute si es paso 1 al cargar
         $this->dispatch('pasoCambiado', $this->pasoActual);

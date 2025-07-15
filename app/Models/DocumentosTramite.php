@@ -20,7 +20,8 @@ class DocumentosTramite extends Model
 
     public function tramite()
     {
-        return $this->belongsTo(TramiteC::class, 'tramite_id');
+       return $this->belongsTo(TramiteC::class, 'tramite_id')
+        ->whereNull('deleted_at');
     }
 
     public function tipoDocumento()

@@ -18,5 +18,7 @@ class Persona extends Model
         'apellido_materno',
         'rfc',
         'curp',
+         'telefono',
+        'correo_electronico',
     ];
 }

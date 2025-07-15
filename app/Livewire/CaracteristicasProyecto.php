@@ -77,8 +77,8 @@ public $estudioImpactoExistente;
             'tipo_construccion_id'        => $this->tipo_construccion_id,
             'niveles'                     => $this->niveles,
             'infraestructura_seleccionada'=> $this->infraestructura_seleccionada,
-            'plano_documento_id'          => $planoDocumento?->id,
-            'estudio_impacto_documento_id'=> $estudioImpactoDocumento?->id,
+            'plano_documento_id'          => $planoDocumento->id ?? null,
+            'estudio_impacto_documento_id'=> $estudioImpactoDocumento->id ?? null,
          ]);
 
 

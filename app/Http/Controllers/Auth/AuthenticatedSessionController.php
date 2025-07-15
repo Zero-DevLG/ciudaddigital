@@ -32,6 +32,13 @@ class AuthenticatedSessionController extends Controller
 
             return redirect('admin/dashboard');
         }
+
+
+        if ($request->user()->usertype === 'user-verificador') {
+
+            return redirect('verificador/dashboard');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\DocumentosTramite;
 use DragonCode\Contracts\Cache\Store;
 use Illuminate\Http\UploadedFile;
+use Carbon\Carbon;
 
 class DocumentoService
 {
@@ -32,6 +33,8 @@ class DocumentoService
         string $disk = 'public'
     ) {
 
+        //dd($archivo, $tramiteId, $tipoDocumentoId, $nombreDocumento, $disk);
+
         #Ruta base
         $rutaCarpeta = "documentos/{$tramiteId}";
 
@@ -41,26 +44,26 @@ class DocumentoService
         }
 
         $nombreArchivo = $nombreDocumento ?? $archivo->getClientOriginalName();
+
+
         $rutaFinal = $archivo->storeAs($rutaCarpeta, $nombreArchivo, $disk);
 
         // #Eliminar el archivo
 
-        //  $documentoExistente = DocumentosTramite::where('tramite_id', $tramiteId)
-        //     ->where('tipo_documento_id', $tipoDocumentoId)
-        //     ->first();
+         $documentoExistente = DocumentosTramite::where('tramite_id', $tramiteId)
+            ->where('tipo_documento_id', $tipoDocumentoId)
+            ->first();
+
+
 
          if ($documentoExistente) {
             // Borra el archivo físico anterior
-            Storage::disk($disk)->delete($documentoExistente->url);
-            // Actualiza el registro
-            $documentoExistente->update([
-                'nombre_documento' => $nombreArchivo,
-                'url' => $rutaFinal,
-            ]);
-            return $documentoExistente;
+            // Storage::disk($disk)->delete($documentoExistente->url);
+            //Borrado logico
+            $documentoExistente->delete();
+           // dd($documentoExistente->fresh());
         }
 
-        // Si no existe, crea uno nuevo
         return $documento  = DocumentosTramite::create([
             'tramite_id'        => $tramiteId,
             'nombre_documento'  => $nombreArchivo,

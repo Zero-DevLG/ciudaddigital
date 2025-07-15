@@ -14,4 +14,12 @@ class HomeController extends Controller
 
         return view('admin.dashboard');
     }
+
+    public function verificadorIndex()
+    {
+
+        return view('verificador.dashboard');
+    }
+
+
 }

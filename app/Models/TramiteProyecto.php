@@ -42,6 +42,11 @@ class TramiteProyecto extends Model
         return $this->belongsTo(CatalogoConstruccion::class, 'tipo_construccion_id');
     }
 
+public function getInfraestructurasAttribute()
+{
+    return CatalogoInfraestructura::whereIn('id', $this->infraestructura_seleccionada ?? [])->get();
+}
+
     public function planoDocumento()
 {
     return $this->belongsTo(DocumentosTramite::class, 'plano_documento_id');

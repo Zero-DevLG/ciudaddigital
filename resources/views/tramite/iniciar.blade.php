@@ -1,9 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-400 leading-tight">
-            {{ __('Panel principal') }}
-        </h2>
-    </x-slot>
+
 
     {{-- Contenedor principal que ocupa toda la pantalla restante después del header --}}
     <div style="background-color: #eae8de;" class="flex h-[calc(100vh-4rem)] overflow-hidden px-4 py-4">

@@ -5,7 +5,8 @@
             ← Atrás
         </button>
         <span class="text-lg font-semibold">Paso {{ $pasoActual + 1 }} de {{ count($pasos) }}</span>
-        <button wire:click="guardarDatosHijoActivo" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        <button wire:click="guardarDatosHijoActivo" class="px-4 py-2 bg-[#dd5172] text-white rounded hover:bg-[#9D2449]"
+
             @disabled($pasoActual == count($pasos) - 1)>
             Siguiente →
         </button>
@@ -13,15 +14,16 @@
 
     <div>
         @if ($pasoActual === 0)
-            <livewire:usosuelo.datos-solicitante :tramiteId="$tramiteId" />
+            <livewire:usosuelo.datos-solicitante :tramiteId="$tramiteId" :tramiteEstatus="$tramite_estatus" />
         @elseif ($pasoActual === 1)
             <livewire:usosuelo.datos-propiedad :tramiteId="$tramiteId" />
         @elseif ($pasoActual === 2)
             <livewire:caracteristicas_proyecto :tramiteId="$tramiteId" />
         @elseif ($pasoActual === 3)
             <livewire:documentacion-solicitante-form :tramiteId="$tramiteId" />
+        @elseif($pasoActual === 4)
+            <livewire:resumen-tramite :tramiteId="$tramiteId" />
         @endif
-
 
     </div>
 </div>

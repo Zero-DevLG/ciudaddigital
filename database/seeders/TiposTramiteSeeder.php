@@ -16,6 +16,7 @@ class TiposTramiteSeeder extends Seeder
     {
         DB::table('tipos_tramite')->insert([
             'nombre' => 'Solicitud de uso de suelo',
+            'code' => 'USO-SUELO',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);

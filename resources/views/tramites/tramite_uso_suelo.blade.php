@@ -6,7 +6,7 @@
 
 
             <!-- Nombre del trámite en azul minimalista -->
-            <p class="text-xl font-bold text-blue-600 dark:text-blue-400 uppercase">
+            <p class="text-xl font-bold uppercase text-[#9D2449]">
                 {{ $tramite_tipo->nombre ?? 'Nombre del trámite' }}
             </p>
 

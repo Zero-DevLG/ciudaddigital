@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PdfController;
+use App\Http\Controllers\TramitesController;
 
 use Livewire\Livewire;
 
@@ -28,6 +30,8 @@ require __DIR__ . '/auth.php';
 
 route::get('admin/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'admin'])->name('dashboard_admin');
 
+route::get('verificador/dashboard', [HomeController::class, 'verificadorIndex'])->middleware(['auth', 'verificador'])->name('dashboard_verificador');
+
 route::resource('users', UserController::class);
 
 //
@@ -43,7 +47,27 @@ Route::get('/tramite/{id}', [App\Http\Controllers\TramitesController::class, 'in
     ->name('tramite.iniciar')
     ->middleware('auth');
 
+// Ruta mis tramites
+Route::get('/mis-tramites', [App\Http\Controllers\TramitesController::class, 'misTramites'])
+    ->name('tramites.usuario')
+    ->middleware('auth');
+
 // Retomar tramite
 
 Route::get('/tramites/uso-suelo/{tramite}', [App\Http\Controllers\TramitesController::class, 'mostrarTramite'])->name('tramites.uso_suelo')
     ->middleware('auth');
+
+// Validar tramite
+Route::get('/tramites/validar/{tramite}', [App\Http\Controllers\TramitesController::class, 'validarTramite'])->name('tramites.validar')
+    ->middleware('auth');
+
+// Generar PDF del tramite
+Route::get('/pdf-reporte', [PdfController::class, 'exportar']);
+
+
+Route::get('/tramite/{id}/pdf', [TramitesController::class, 'generarPdf'])->name('tramite.generar.pdf');
+
+
+Route::get('/tramites/{id}/resumen', [TramitesController::class, 'mostrarResumen'])->name('tramites.resumen');
+
+Route::get('tramites/{id}/ver', [TramitesController::class, 'verTramite'])->name('tramites.ver');
