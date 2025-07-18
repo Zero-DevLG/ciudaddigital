@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex flex-col gap-1">
-            <p class="text-xl font-bold text-blue-600 uppercase">
-                {{ $tramite->tipo_tramite_nombre ?? 'Nombre del trámite' }}
+            <p class="text-xl font-bold text-[#9D2449] uppercase">
+
             </p>
             <hr class="border-gray-300">
             <div>

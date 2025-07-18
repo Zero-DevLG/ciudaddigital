@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PdfController;
+use App\Http\Controllers\PrevencionController;
 use App\Http\Controllers\TramitesController;
 
 use Livewire\Livewire;
@@ -71,3 +72,8 @@ Route::get('/tramite/{id}/pdf', [TramitesController::class, 'generarPdf'])->name
 Route::get('/tramites/{id}/resumen', [TramitesController::class, 'mostrarResumen'])->name('tramites.resumen');
 
 Route::get('tramites/{id}/ver', [TramitesController::class, 'verTramite'])->name('tramites.ver');
+
+
+Route::post('/validaciones/guardar', [PrevencionController::class, 'guardarPrevencion'])->name('validaciones.guardar');
+
+Route::post('/validaciones/obtener', [PrevencionController::class, 'obtenerPrevencion'])->name('validaciones.obtener');

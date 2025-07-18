@@ -31,6 +31,11 @@ class TramiteValidar extends Component
     }
 
 
+    public function test(){
+        dd('Test method called');
+    }
+
+
     public function render()
     {
         return view('livewire.verificador.tramite-validar');
