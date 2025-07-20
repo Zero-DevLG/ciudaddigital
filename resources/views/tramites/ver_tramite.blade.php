@@ -30,6 +30,11 @@
                     <p class="text-sm text-gray-700">Estatus actual: <strong class="text-[#9D2449]">{{ $estatus_tramite->estado }}</strong></p>
                     <p class="text-sm text-gray-500">Fecha de inicio: {{ $tramite->tramite_inicio }}</p>
                     <p class="text-sm text-gray-500">Fecha de término: {{ $tramite->tramite_termino ?? '—' }}</p>
+
+                    <p class="text-sm text-gray-500"><strong>Descargar acuse de solicitud</strong></p>
+                      <a href="{{ asset('storage/' . $acuse_solicitud->url) }}" class="text-[#9D2449] hover:underline" target="_blank">Descargar PDF</a>
+
+
                 </div>
 
                 {{-- DATOS DEL SOLICITANTE --}}
@@ -161,15 +166,77 @@
                     </ul>
                 </section>
 
+                {{-- Resoluciones --}}
+
+                @if($resoluciones)
+
+                 <section class="mb-12 bg-white rounded-lg border shadow p-6">
+
+                    <h2 class="text-2xl font-semibold text-[#9D2449] mb-6">Resoluciones</h2>
+                    <hr>
+
+                    @if($resolucion_prevencion)
+                        <div class="mb-6">
+                            <p class="text-sm text-gray-700 mb-2">Tipo de resolución: <strong class="text-[#9D2449]">{{ $datos_prevencion['tipo_resolucion'] }}</strong></p>
+                            <p class="text-sm text-gray-700 mb-2">Fecha de emision: {{ $datos_prevencion['fecha_emision'] }}</p>
+                            @if(!$resolucion_prevencion->deleted_at)
+                            <p class="text-sm text-gray-700"><strong>Su tramite tiene una resolucion de prevención, debera subsanarla  dentro de los 15 dias habiles despues de su emision</strong></p>
+                            @else
+                             <p class="text-sm text-green-700"><strong>Prevencion subsanada</strong></p>
+                            @endif
+                        </div>
+
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-[#9D2449] mb-2">Pasos del trámite</h3>
+                            <ul class="list-disc list-inside ml-4">
+                                @foreach($datos_prevencion['tramite_pasos'] as $paso)
+                                    <li>{{ $paso->paso->nombre_paso }}
+                                        @if($paso->es_valido)
+                                            <span class="text-green-600"> - Válido</span>
+                                        @else
+                                            <span class="text-red-600"> - No válido</span>
+                                        @endif
+                                        @if($paso->observaciones)
+                                            <p class="text-sm text-gray-600 mt-1">Observaciones: {{ $paso->observaciones }}</p>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                            <p>Descargar documento de resolución</p>
+                            <a href="{{ asset('storage/' . $resolucion_prevencion->documento->url) }}" class="text-[#9D2449] hover:underline" target="_blank">Descargar PDF</a>
+
+                        </div>
+                        <hr>
+                    @endif
+                    @if($resolucion_f)
+                     <div class="mb-6">
+                            <p class="text-sm text-gray-700 mb-2">Tipo de resolución: <strong class="text-[#9D2449]">{{ $resolucion_f->tipoResolucion->nombre }}</strong></p>
+                            <p class="text-sm text-gray-700 mb-2">Fecha de emision: {{ $resolucion_f->fecha_emision }}</p>
+                        </div>
+
+                        <div class="mb-6">
+                            <p>Descargar documento de resolución</p>
+                            <a href="{{ asset('storage/' . $resolucion_f->documento->url) }}" class="text-[#9D2449] hover:underline" target="_blank">Descargar PDF</a>
+
+                        </div>
+                    @endif
+                 </section>
+                @endif
+
+
+
+
                 {{-- ACCIONES --}}
                 <div class="flex justify-between">
+                    @if($tipo_usuario->usertype == 'user-verificador')
+                    <a href="{{ route('dashboard_verificador') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded shadow text-sm font-semibold">
+                        ← Volver al panel
+                    </a>
+                    @else
                     <a href="{{ route('dashboard') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded shadow text-sm font-semibold">
                         ← Volver al panel
                     </a>
-
-                    <a href="{{ route('tramite.generar.pdf', ['id' => $tramite->id]) }}" class="bg-[#9D2449] hover:bg-[#7B1C39] text-white px-6 py-2 rounded shadow text-sm font-semibold">
-                        Descargar documento PDF
-                    </a>
+                    @endif
                 </div>
             </div>
 

@@ -7,6 +7,8 @@ use Livewire\Component;
 use App\Models\TramiteC;
 use App\Models\TipoTramite;
 use App\Models\CatalogoPasosTramite;
+use App\Models\Tramite;
+use App\Models\TramiteResoluciones;
 
 class TramiteValidar extends Component
 {
@@ -16,6 +18,8 @@ class TramiteValidar extends Component
     public $pasos_puntero;
     public $tramite;
     public $tipo_tramite;
+    public $resolucion_prevencion;
+
 
     public function mount($tramiteId){
 
@@ -27,6 +31,20 @@ class TramiteValidar extends Component
         $this->pasos_puntero = CatalogoPasosTramite::where('tipo_tramite_id', $tramite_tipo->id)
             ->orderBy('n_paso')
             ->get();
+
+        //Verificar si el tramite cuenta con una resolucion de prevencion
+       $resolucion_prevencion = TramiteResoluciones::withTrashed()
+            ->with([
+                'tipoResolucion',
+                'documento'
+            ])
+            ->where('tramite_id', $this->tramite_id)
+            ->where('tipo_resolucion_id', 4)
+            ->first();
+
+
+
+        $this->resolucion_prevencion = $resolucion_prevencion;
 
     }
 

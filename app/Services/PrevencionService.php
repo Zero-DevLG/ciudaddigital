@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\PrevencionesTramite;
+use App\Models\Tramite;
+use App\Models\TramiteResoluciones;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -43,5 +45,18 @@ class PrevencionService
             ->where('catalogo_paso_id', $pasoId)
             ->first();
     }
+
+    public function obtenerResolucionPrevencionVerificador($tramiteId)
+    {
+
+        $prevencion_resolucion = TramiteResoluciones::where('tramite_id', $tramiteId)
+            ->where('tipo_resolucion_id', 4) // 4 es el tipo de resolución de prevención
+            ->first();
+
+        return $prevencion_resolucion;
+
+    }
+
+
 }
 

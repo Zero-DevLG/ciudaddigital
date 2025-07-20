@@ -1,21 +1,40 @@
+
+
 <div>
     {{ $tramiteId }}
     <div class="">
         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Información del Predio</h2>
+
+          @if($tramite_estatus == 5)
+            @if($modo_edicion)
+                <div class="inline-block px-3 py-1 text-sm font-semibold text-red-700 bg-red-100 border border-red-300 rounded-lg">
+                    ⚠ Es necesario modificar la información de este paso
+                    <p><Strong>Observaciones del verificador: <span class="text-sm font-semibold text-red-700">{{ $observaciones }}</span></Strong></p>
+                </div>
+
+                @else
+                <div class="inline-block px-3 py-1 text-sm font-semibold text-green-700 bg-green-100 border border-green-300 rounded-lg">
+                    ✅ Información del solicitante
+                    <p><Strong>Observaciones del verificador: <span class="text-sm font-semibold text-green-700">{{ $observaciones }}</span></Strong></p>
+                </div>
+            @endif
+        @endif
+
+        <hr>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Clave catastral -->
             <div class="col-span-1 md:col-span-3">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Clave catastral</label>
                 <input type="text" wire:model.defer="clave_catastral"
-                    class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                    class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    @if(!$modo_edicion) disabled @endif />
                 @error('clave_catastral')
                     <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
                 @enderror
             </div>
 
             <!-- Dirección del predio -->
-
             <div class="col-span-1 md:col-span-3">
                 <h2 class="text-xl font-semibold text-gray-800 mt-8 mb-4">Dirección del Predio</h2>
 
@@ -24,7 +43,8 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Estado</label>
                         <input type="text" wire:model.defer="estado"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            @if(!$modo_edicion) disabled @endif />
                         @error('estado')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -34,7 +54,8 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Delegación / Municipio</label>
                         <input type="text" wire:model.defer="delegacion_municipio"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            @if(!$modo_edicion) disabled @endif />
                         @error('delegacion_municipio')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -45,7 +66,7 @@
                         <label class="block text-sm font-medium text-gray-700">Código Postal</label>
                         <input type="text" wire:model.defer="cp"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            maxlength="5" />
+                            maxlength="5" @if(!$modo_edicion) disabled @endif />
                         @error('cp')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -55,7 +76,8 @@
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700">Calle</label>
                         <input type="text" wire:model.defer="calle"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            @if(!$modo_edicion) disabled @endif />
                         @error('calle')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -65,7 +87,8 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Número Exterior</label>
                         <input type="text" wire:model.defer="n_exterior"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            @if(!$modo_edicion) disabled @endif />
                         @error('n_exterior')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
@@ -75,19 +98,14 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Número Interior</label>
                         <input type="text" wire:model.defer="n_interior"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            @if(!$modo_edicion) disabled @endif />
                         @error('n_interior')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>
-
-
             </div>
-
-
-
-
 
             <!-- Mapa -->
             <div class="col-span-1 md:col-span-2">
@@ -100,12 +118,12 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Latitud</label>
                     <input type="text" wire:model="latitud" readonly
-                        class="w-full rounded border border-gray-300 bg-gray-100 px-3 py-2" />
+                        class="w-full rounded border border-gray-300 bg-gray-100 px-3 py-2" disabled/>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Longitud</label>
                     <input type="text" wire:model="longitud" readonly
-                        class="w-full rounded border border-gray-300 bg-gray-100 px-3 py-2" />
+                        class="w-full rounded border border-gray-300 bg-gray-100 px-3 py-2" disabled/>
                 </div>
             </div>
 
@@ -113,7 +131,8 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Superficie total del terreno (m²)</label>
                 <input type="number" step="0.01" wire:model.defer="superficie_terreno"
-                    class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                    class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    @if(!$modo_edicion) disabled @endif />
                 @error('superficie_terreno')
                     <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
                 @enderror
@@ -123,7 +142,8 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Uso actual del suelo</label>
                 <select wire:model.defer="uso_actual"
-                    class="mt-1 block w-full rounded border border-gray-300 text-black px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    class="mt-1 block w-full rounded border border-gray-300 text-black px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    @if(!$modo_edicion) disabled @endif >
                     <option value="">Seleccione...</option>
                     @foreach ($catalogoUsos as $uso)
                         <option value="{{ $uso->id }}">{{ $uso->tipo_uso }}</option>
@@ -138,7 +158,8 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de propiedad</label>
                 <select wire:model.defer="tipo_propiedad"
-                    class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    @if(!$modo_edicion) disabled @endif >
                     <option value="">Seleccione...</option>
                     @foreach ($catalogoTipos as $tipo)
                         <option value="{{ $tipo->id }}">{{ $tipo->tipo_propiedad }}</option>
@@ -153,7 +174,8 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Uso propuesto solicitado</label>
                 <select wire:model.defer="uso_propuesto"
-                    class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    @if(!$modo_edicion) disabled @endif >
                     <option value="">Seleccione...</option>
                     @foreach ($catalogoPropuestos as $propuesto)
                         <option value="{{ $propuesto->id }}">{{ $propuesto->tipo_uso }}</option>
@@ -164,19 +186,19 @@
                 @enderror
             </div>
         </div>
+
         <hr>
-        <!-- Checkbox acceso y zona -->
-
         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Accesibilidad</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2  border-gray-200">
+        <div class="grid grid-cols-1 md:grid-cols-2 border-gray-200">
             <div class="flex items-center space-x-3">
-                <input type="checkbox" wire:model.defer="acceso_vialidad" class="rounded border-gray-300 h-5 w-5">
+                <input type="checkbox" wire:model.defer="acceso_vialidad" class="rounded border-gray-300 h-5 w-5"
+                    @if(!$modo_edicion) disabled @endif>
                 <label class="text-sm text-gray-700 select-none">¿Cuenta con acceso directo a vialidades?</label>
             </div>
 
             <div class="flex items-center space-x-3">
-                <input type="checkbox" wire:model.defer="zona_urbana" class="rounded border-gray-300 h-5 w-5">
+                <input type="checkbox" wire:model.defer="zona_urbana" class="rounded border-gray-300 h-5 w-5"
+                    @if(!$modo_edicion) disabled @endif>
                 <label class="text-sm text-gray-700 select-none">¿Está en zona urbana?</label>
             </div>
         </div>
@@ -184,17 +206,12 @@
 
     @script
         <script>
-            console.log('Cargando mapa...');
-
             let map;
             let marker;
 
             $wire.on('initMapaLeaflet', () => {
-                console.log('Inicializando mapa...');
-
                 const defaultLatLng = [{{ $latitud ?? 19.4326 }}, {{ $longitud ?? -99.1332 }}];
 
-                // Solo inicializa si no existe ya
                 if (!map) {
                     map = L.map('map').setView(defaultLatLng, 13);
 
@@ -202,16 +219,12 @@
                         attribution: '&copy; OpenStreetMap contributors'
                     }).addTo(map);
 
-                    // Marcador inicial
                     if ({{ $latitud && $longitud ? 'true' : 'false' }}) {
                         marker = L.marker(defaultLatLng).addTo(map);
                     }
 
                     map.on('click', function(e) {
-                        const {
-                            lat,
-                            lng
-                        } = e.latlng;
+                        const { lat, lng } = e.latlng;
 
                         if (marker) {
                             marker.setLatLng(e.latlng);
@@ -219,17 +232,13 @@
                             marker = L.marker(e.latlng).addTo(map);
                         }
 
-                        console.log(lat, lng);
-
                         document.querySelector('input[wire\\:model="latitud"]').value = lat;
                         document.querySelector('input[wire\\:model="longitud"]').value = lng;
 
-                        Livewire.dispatch('setCoordinates', {
-                            lat,
-                            lng
-                        });
+                        Livewire.dispatch('setCoordinates', { lat, lng });
                     });
                 }
             });
         </script>
     @endscript
+</div>

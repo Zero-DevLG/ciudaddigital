@@ -6,6 +6,8 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Services\DocumentoService;
 use App\Models\DocumentosTramite;
+use App\Models\TramiteC;
+use App\Models\PrevencionesTramite;
 
 
 class DocumentacionSolicitanteForm extends Component
@@ -27,6 +29,10 @@ class DocumentacionSolicitanteForm extends Component
     public $comprobante_impuestos_id_existente;
     public $documentos_adicionales_id_existente;
     protected $listeners = ['guardarDatos'];
+    public $modo_edicion = false;
+    public $tramite_estatus;
+    public $observaciones;
+    public $prevencion_paso;
 
 
     public function guardarDatos(DocumentoService $documentoService)
@@ -99,6 +105,39 @@ class DocumentacionSolicitanteForm extends Component
     public function mount($tramiteId)
     {
         $this->tramiteId = $tramiteId;
+
+         $tramite = TramiteC::find($this->tramiteId);
+
+        $this->tramite_estatus = $tramite->cat_estatus_id;
+
+        $prevencion_paso = PrevencionesTramite::where('tramite_id', $this->tramiteId)
+            ->where('catalogo_paso_id', 4)
+            ->first();
+
+
+          $this->observaciones = $prevencion_paso->observaciones;
+
+
+         $estatus_tramite_f = in_array((int)$this->tramite_estatus, [1, 5]);
+
+           if ($estatus_tramite_f) {
+
+             if ($prevencion_paso) {
+                $this->prevencion_paso = $prevencion_paso->catalogo_paso_id;
+                if($prevencion_paso->es_valido === 0){
+                    $this->modo_edicion = true; // Permitir edición si hay una prevención válida
+                } else {
+                    $this->modo_edicion = false; // No permitir edición si no hay prevención válida
+                }
+            } else {
+                $prevencion_paso = null;
+            }
+        } else {
+            $this->modo_edicion = false; // No permitir edición en otros estatus
+        }
+
+
+
         $this->identificacion_id_existente = DocumentosTramite::where('tramite_id', $tramiteId)
             ->where('tipo_documento_id', 9)
             ->whereNull('deleted_at')

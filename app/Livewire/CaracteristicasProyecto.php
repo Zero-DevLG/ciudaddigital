@@ -9,6 +9,8 @@ use App\Models\CatalogoConstruccion;
 use App\Models\CatalogoInfraestructura;
 use App\Services\DocumentoService;
 use App\Models\TramiteProyecto;
+use App\Models\TramiteC;
+use App\Models\PrevencionesTramite;
 
 class CaracteristicasProyecto extends Component
 {
@@ -35,18 +37,15 @@ public $estudioImpactoExistente;
     public $tramiteId;
     protected $listeners = ['guardarDatos'];
 
+     public $tramite_estatus;
+    public $observaciones;
+    public $prevencion_paso;
+    public $modo_edicion;
+
 
     public function guardarDatos(DocumentoService $documentoService) {
 
-         $this->validate([
-        'descripcion_general'      => 'required|string',
-        'impacto_estimado_id'      => 'required|exists:catalogo_impactos,id',
-        'tipo_construccion_id'     => 'required|exists:catalogo_construccions,id',
-        'niveles'                  => 'required|integer|min:1',
-        'infraestructura_seleccionada' => 'nullable|array',
-        'plano'                    => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-        'estudio_impacto'          => 'nullable|file|mimes:pdf',
-    ]);
+
 
          if ($this->plano) {
         $planoDocumento =$documentoService->storeDocumento(
@@ -70,21 +69,24 @@ public $estudioImpactoExistente;
 
     //Guardar datos
 
-         $tramite_proyecto = TramiteProyecto::updateOrCreate([
-            'tramite_id' => $this->tramiteId,
-            'descripcion_general'         => $this->descripcion_general,
-            'impacto_estimado_id'         => $this->impacto_estimado_id,
-            'tipo_construccion_id'        => $this->tipo_construccion_id,
-            'niveles'                     => $this->niveles,
-            'infraestructura_seleccionada'=> $this->infraestructura_seleccionada,
-            'plano_documento_id'          => $planoDocumento->id ?? null,
-            'estudio_impacto_documento_id'=> $estudioImpactoDocumento->id ?? null,
-         ]);
+        $tramite_proyecto = TramiteProyecto::updateOrCreate(
+            // Condiciones para buscar
+            ['tramite_id' => $this->tramiteId],
+
+            // Campos a actualizar o crear
+            [
+                'descripcion_general'          => $this->descripcion_general,
+                'impacto_estimado_id'          => $this->impacto_estimado_id,
+                'tipo_construccion_id'         => $this->tipo_construccion_id,
+                'niveles'                      => $this->niveles,
+                'infraestructura_seleccionada' => $this->infraestructura_seleccionada,
+                'plano_documento_id'           => $planoDocumento->id ?? null,
+                'estudio_impacto_documento_id' => $estudioImpactoDocumento->id ?? null,
+            ]
+        );
 
 
          $this->dispatch('siguientePaso');
-
-
 
     }
 
@@ -98,7 +100,39 @@ public $estudioImpactoExistente;
     public function mount($tramiteId)
     {
 
+
         $this->tramiteId = $tramiteId;
+
+          $tramite = TramiteC::find($this->tramiteId);
+
+        $this->tramite_estatus = $tramite->cat_estatus_id;
+
+        $prevencion_paso = PrevencionesTramite::where('tramite_id', $this->tramiteId)
+            ->where('catalogo_paso_id', 3)
+            ->first();
+
+
+          $this->observaciones = $prevencion_paso->observaciones;
+
+
+         $estatus_tramite_f = in_array((int)$this->tramite_estatus, [1, 5]);
+
+           if ($estatus_tramite_f) {
+
+             if ($prevencion_paso) {
+                $this->prevencion_paso = $prevencion_paso->catalogo_paso_id;
+                if($prevencion_paso->es_valido === 0){
+                    $this->modo_edicion = true; // Permitir edición si hay una prevención válida
+                } else {
+                    $this->modo_edicion = false; // No permitir edición si no hay prevención válida
+                }
+            } else {
+                $prevencion_paso = null;
+            }
+        } else {
+            $this->modo_edicion = false; // No permitir edición en otros estatus
+        }
+
 
         $this->catalogoImpactos = CatalogoImpacto::all();
         $this->catalogoConstrucciones = CatalogoConstruccion::all();

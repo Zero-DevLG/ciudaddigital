@@ -3,6 +3,7 @@
 namespace App\Livewire\Usosuelo;
 
 use App\Models\Persona;
+use App\Models\PrevencionesTramite;
 use App\Models\TramitePersona;
 use Livewire\Component;
 
@@ -22,6 +23,8 @@ class DatosSolicitante extends Component
     public $persona;
     public $tramite_estatus;
     public bool $modo_edicion;
+    public $observaciones;
+    public $prevencion_paso;
 
 
     public function mount($tramiteId, $tramiteEstatus)
@@ -30,9 +33,33 @@ class DatosSolicitante extends Component
 
         $this->tramite_estatus = $tramiteEstatus;
 
-         $this->modo_edicion = in_array((int)$this->tramite_estatus, [1, 5]);
+
+        $prevencion_paso = PrevencionesTramite::where('tramite_id', $this->tramite_id)
+            ->where('catalogo_paso_id', 1)
+            ->first();
+
+        $this->observaciones = $prevencion_paso->observaciones;
 
 
+
+
+         $estatus_tramite_f = in_array((int)$this->tramite_estatus, [1, 5]);
+
+        if ($estatus_tramite_f) {
+
+             if ($prevencion_paso) {
+                $this->prevencion_paso = $prevencion_paso->catalogo_paso_id;
+                if($prevencion_paso->es_valido === 0){
+                    $this->modo_edicion = true; // Permitir edición si hay una prevención válida
+                } else {
+                    $this->modo_edicion = false; // No permitir edición si no hay prevención válida
+                }
+            } else {
+                $this->prevencion_paso = null;
+            }
+        } else {
+            $this->modo_edicion = false; // No permitir edición en otros estatus
+        }
 
 
         // Cargar datos de la persona si ya existe

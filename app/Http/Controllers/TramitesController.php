@@ -17,15 +17,20 @@ use App\Services\FechaService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-
-
+use App\Models\CatalogoDocumentos;
+use App\Models\DocumentosTemporales;
+use App\Models\PrevencionesTramite;
+use App\Models\Tramite;
 use App\Services\PdfService;
 use App\Services\QrCodeService;
 use App\Services\FolioService;
 use Carbon\Carbon;
-
+use Dom\Document;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 use Spatie\Permission\Traits\HasRoles;
-
+use App\Models\TramiteResoluciones;
+use App\Models\User;
 
 class TramitesController extends Controller
 {
@@ -44,8 +49,17 @@ class TramitesController extends Controller
     public $plano_documento;
     public $estudio_impacto_documento;
     public $documentos_tramite;
+    public $pdfService;
+    public $documentoService;
 
+    public function __construct(PdfService $pdfService, DocumentoService $documentoService)
+    {
 
+        $this->documentoService = $documentoService;
+
+        $this->pdfService = $pdfService;
+
+    }
 
     public function iniciar($id)
     {
@@ -208,10 +222,21 @@ class TramitesController extends Controller
 
 
 
+        // Verificar si el trámite tiene un folio asignado
+        if(!$tramite->folio) {
+            $folio = $folioService->gerarFolio($tramites->tipo_tramite_id, Carbon::now());
+        }else{
+            $folio = $tramite->folio;
+            //Prevencion
+            $resolucion_prevencion_f2 = TramiteResoluciones::
+            where('tramite_id',$tramite->id)
+            ->where('tipo_resolucion',4)->first();
 
-
-            //$folio= 'test';
-           $folio = $folioService->gerarFolio($tramites->tipo_tramite_id, Carbon::now());
+            if($resolucion_prevencion_f2){
+                $resolucion_prevencion_f2->deleted_at = Carbon::now();
+                $resolucion_prevencion_f2->save();
+            }
+        }
 
 
            $tramite_actual = TramiteC::findOrFail($this->tramiteId);
@@ -333,8 +358,66 @@ class TramitesController extends Controller
     // Documentos del trámite
     $documentos_tramite = DocumentosTramite::where('tramite_id', $id)->get();
 
+
+    //Obtener historicos de resoluciones
+    $resoluciones = TramiteResoluciones::where('tramite_id', $id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+
+
+    //Verificar si existe una resolucion de prevencion
+
+   $resolucion_prevencion = TramiteResoluciones::withTrashed()
+    ->with([
+        'tipoResolucion',
+        'documento'
+    ])
+    ->where('tramite_id', $id)
+    ->where('tipo_resolucion_id', 4)
+    ->first();
+
+
+
+
+    $tramite_pasos = PrevencionesTramite::with(['paso'])
+        ->where('tramite_id', $id)
+        ->orderBy('catalogo_paso_id', 'asc')
+        ->get();
+
+
+
+    $datos_prevencion = [
+        'tramite_id' => $id,
+        'tipo_resolucion' => $resolucion_prevencion ? $resolucion_prevencion->tipoResolucion->nombre : 'No disponible',
+        'tramite_pasos' => $tramite_pasos,
+        'fecha_emision' => $resolucion_prevencion ? $resolucion_prevencion->fecha_emision : null,
+
+
+    ];
+
+    //Obtener tipo de usuario
+    $tipo_usuario = User::where('id', Auth::id())->first();
+
+
+    // dd($resolucion_prevencion,$datos_prevencion, $tramite_pasos);
+
+    //Obtener acuse de solicitud
+    $acuse_solicitud = DocumentosTramite::where('tramite_id', $id)
+        ->where('tipo_documento_id', 1) // ID del tipo de documento para acuse de solicitud
+        ->first();
+
+    //Obtener resolucion
+
+    $resolucion_f = TramiteResoluciones::with(['tipoResolucion', 'documento'])
+        ->where('tramite_id', $id)
+        ->where('tipo_resolucion_id', '!=', 4)
+        ->first();
+
+
+
      // Oculta datos sensibles para la vista pública
-    if (!\auth()->user()) {
+    if (!Auth::user()) {
         if ($persona) {
             $persona->telefono = null;
             $persona->correo_electronico = null;
@@ -359,7 +442,13 @@ class TramitesController extends Controller
         'estudio_impacto_documento',
         'car_proyecto',
         'documentos_tramite',
-        'estatus_tramite'
+        'estatus_tramite',
+        'resoluciones',
+        'datos_prevencion',
+        'resolucion_prevencion',
+        'resolucion_f',
+        'acuse_solicitud',
+        'tipo_usuario'
     ));
 }
 
@@ -371,18 +460,247 @@ class TramitesController extends Controller
 
           session(['pasoActual' => 0]);
 
-        // o
-        // $userId = auth()->user()->id;
-
-        // Aquí puedes implementar la lógica para obtener los trámites del usuario
-        // Por ejemplo, podrías usar un modelo TramiteC y filtrar por user_id
-        //$tramites = TramiteC::where('user_id',$usuario->id )->get();
-
         return view('user.tramites-usuario', compact('usuario'));
     }
 
 
 
+    public function firmarResolucion(Request $request)
+    {
+
+        // Verifica que se recibió correctamente todo
+        if (!$request->hasFile('cer') || !$request->hasFile('key') || !$request->input('password')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Faltan archivos o contraseña'
+            ]);
+        }
+
+
+            // Recuperar trámite y PDF
+        $tramite = TramiteC::findOrFail($request->tramite_id);
+        $tipoDocumento = CatalogoDocumentos::findOrFail(5);
+
+        $documento = DocumentosTramite::where('tramite_id', $request->tramite_id)
+        ->where('tipo_documento_id', 5) // Resolución
+        ->latest()
+        ->first();
+
+
+
+        if (!$documento || !Storage::disk('public')->exists($documento->url)) {
+            return response()->json(['success' => false, 'message' => 'Documento no encontrado']);
+        }
+
+        $pdfPath = Storage::disk('public')->path($documento->url);
+
+
+        $tempPath = storage_path('app/temp-firma');
+        if (!file_exists($tempPath)) mkdir($tempPath, 0777, true);
+
+        // Guarda los archivos en disco
+        $cerPath = $request->file('cer')->storeAs('temp-firma', 'firma.cer', 'local');
+        $keyPath = $request->file('key')->storeAs('temp-firma', 'firma.key', 'local');
+
+        $cerFullPath = storage_path('app/' . $cerPath);
+        $keyFullPath = storage_path('app/' . $keyPath);
+
+        $cer = $request->file('cer');
+        $key = $request->file('key');
+
+        $cerPath = $cer->storeAs('temp-firma', 'firma.cer');
+        $keyPath = $key->storeAs('temp-firma', 'firma.key');
+
+        // Verificación manual inmediata
+        if (!Storage::exists($cerPath)) {
+            dd("CER no guardado: $cerPath");
+        }
+        if (!Storage::exists($keyPath)) {
+            dd("KEY no guardado: $keyPath");
+        }
+
+        $path = storage_path('app/temp-firma');
+
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        // dd([
+        // 'hasCer' => $request->hasFile('cer'),
+        // 'cerIsValid' => $request->file('cer')->isValid(),
+        // 'hasKey' => $request->hasFile('key'),
+        // 'keyIsValid' => $request->file('key')->isValid(),
+        // ]);
+
+        // dd('Archivos guardados correctamente', [
+        // 'cerPath' => $cerPath,
+        // 'keyPath' => $keyPath,
+        // 'absolute_cer' => storage_path("app/$cerPath"),
+        // 'absolute_key' => storage_path("app/$keyPath"),
+        // ]);
+
+        try {
+        $request->file('cer')->move($path, 'firma.cer');
+        $request->file('key')->move($path, 'firma.key');
+        } catch (\Exception $e) {
+            dd('Error al mover archivos', $e->getMessage());
+        }
+
+
+            $pdfFirmado = $this->pdfService->firmarResolucion(
+                $pdfPath,
+                storage_path('app/' . $cerPath),
+                storage_path('app/' . $keyPath),
+                $request->input('password')
+            );
+
+            $tempFilePath = storage_path('app/temp-firma/' . $documento->nombre_documento);
+            file_put_contents($tempFilePath, $pdfFirmado);
+
+            $uploadedFile = new UploadedFile(
+                $tempFilePath,
+                $documento->nombre_documento,
+                'application/pdf',
+                null,
+                true
+            );
+
+            $nuevoDocumento = $this->documentoService->storeDocumento(
+                $uploadedFile,
+                $tramite->id,
+                5,
+                $documento->nombre_documento,
+                'public'
+            );
+
+            dd($nuevoDocumento);
+
+            return response($pdfFirmado, 200)->header('Content-Type', 'application/pdf');
+
+
+    }
+
+
+    public function obtenerResolucionTemporal(Request $request)
+    {
+        $tramiteId = $request->input('tramite_id');
+
+        // Verificar si el trámite existe
+        $tramite = TramiteC::findOrFail($tramiteId);
+
+        // Obtener el documento de resolución temporal
+        $documento = DocumentosTemporales::where('tramite_id', $tramiteId)
+            ->where('tipo_documento', 5) // ID del tipo de documento de resolución
+            ->first();
+
+        if (!$documento) {
+            return response()->json(['success' => false, 'message' => 'Documento no encontrado'], 404);
+        }
+
+        // Retornar la URL del documento
+        return response()->json(['success' => true, 'url' => asset('storage/' . $documento->url)]);
+    }
+
+
+    public function finalizarVerificacion(Request $request)
+    {
+        $tramiteId = $request->input('tramite_id');
+        $archivoFirmado = $request->file('archivo_firmado');
+
+
+        try {
+
+            DB::beginTransaction();
+
+
+            //obtener si  existe una prevencion
+            $resolucion_prevencion = TramiteResoluciones::withTrashed()
+                ->with([
+                    'tipoResolucion',
+                    'documento'
+                ])
+                ->where('tramite_id', $tramiteId)
+                ->where('tipo_resolucion_id', 4)
+                ->first();
+
+             $tramite_resolucion = TramiteResoluciones::where('tramite_id', $tramiteId)
+            ->whereNull('deleted_at')
+            ->first();
+
+            //dd($resolucion_prevencion);
+
+              // Verificar si el trámite existe
+
+            if($tramite_resolucion->tipo_resolucion_id == 4){
+
+                $tramite = TramiteC::findOrFail($tramiteId);
+                $tramite->cat_estatus_id = 5;
+                $tramite->save();
+            }else{
+
+            $tramite = TramiteC::findOrFail($tramiteId);
+            $tramite->cat_estatus_id = 6;
+            $tramite->save();
+            }
+
+
+
+            //Guardar documento en disco y DB
+
+
+            if($tramite_resolucion->tipo_resolucion_id == 4){
+                $tipoDocumento = 3;
+                $nombre_tipo_documento = CatalogoDocumentos::findOrFail($tipoDocumento);
+                $filename = strtoupper($nombre_tipo_documento->nombre_documento . '-' . 'PREVENCION-'   . $tramite->folio . '.pdf');
+            }else{
+                $tipoDocumento = 5;
+                $nombre_tipo_documento = CatalogoDocumentos::findOrFail($tipoDocumento);
+                $filename = strtoupper($nombre_tipo_documento->nombre_documento . '-'   . $tramite->folio . '.pdf');
+            }
+
+
+            $documentoResolucion = $this->documentoService->storeDocumento(
+                $archivoFirmado,
+                $tramiteId,
+                $tipoDocumento,
+                $filename,
+                'public'
+            );
+
+            $tramite_resolucion->documento_id = $documentoResolucion->id;
+            $tramite_resolucion->fecha_emision = Carbon::now();
+            $tramite_resolucion->save();
+
+
+
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Trámite verificado correctamente']);
+
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'Error al verificar el trámite: ' . $th->getMessage()], 500);
+        }
+
+
+
+
+
+
+
+        $tramiteResoulucionTemporal = TramiteResoluciones::where('tramite_id', $tramiteId)
+            ->first();
+
+
+
+
+
+        return response()->json(['success' => true, 'message' => 'Trámite verificado correctamente']);
+
+    }
 
 
 

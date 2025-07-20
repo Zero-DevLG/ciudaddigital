@@ -7,9 +7,9 @@
     <title>Mi Ciudad Digital</title>
     <style>
         :root {
-            --color-principal: #1e3a8a;
+            --color-principal: #9D2449;
             --color-secundario: #f1f5f9;
-            --color-accion: #2563eb;
+            --color-accion: #9D2449;
         }
 
 
@@ -62,7 +62,7 @@
         }
 
         .hero {
-            background: linear-gradient(to right, #3b82f6, #1e40af);
+            background: linear-gradient(to right, #cd476f, #9D2449);
             color: white;
             text-align: center;
             padding: 4rem 2rem;

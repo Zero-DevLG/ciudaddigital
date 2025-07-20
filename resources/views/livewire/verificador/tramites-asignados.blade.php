@@ -1,4 +1,4 @@
-<div class="p-6 bg-white rounded-lg shadow-md">
+<div x-data="{ tab: 'curso' }" class="p-6 bg-white rounded-lg shadow-md">
 
     {{-- Título principal --}}
     <div class="mb-6 border-b border-gray-200 pb-4">
@@ -6,7 +6,21 @@
         <p class="text-sm text-gray-600 mt-1">Consulta, valida y da seguimiento a los trámites asignados para revisión.</p>
     </div>
 
-    {{-- Instrucciones para el usuario verificador --}}
+    {{-- Tabs --}}
+    <div class="mb-6 flex border-b border-gray-200">
+        <button @click="tab = 'curso'"
+                :class="tab === 'curso' ? 'text-[#9D2449] border-[#9D2449]' : 'text-gray-500 border-transparent'"
+                class="px-4 py-2 font-medium border-b-2 focus:outline-none">
+            En curso
+        </button>
+        <button @click="tab = 'finalizados'"
+                :class="tab === 'finalizados' ? 'text-[#9D2449] border-[#9D2449]' : 'text-gray-500 border-transparent'"
+                class="px-4 py-2 font-medium border-b-2 focus:outline-none">
+            Finalizados
+        </button>
+    </div>
+
+    {{-- Instrucciones (comunes a ambos tabs) --}}
     <div class="mb-6 p-4 bg-[#FFF9F4] border-l-4 border-[#E5B56F] rounded shadow-sm">
         <h2 class="text-[#9D2449] font-semibold text-lg mb-1">Instrucciones para verificación</h2>
         <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
@@ -17,36 +31,72 @@
         </ul>
     </div>
 
-    {{-- Tabla de trámites --}}
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-100 text-gray-700 text-sm font-semibold">
-                <tr>
-                    <th class="px-4 py-2 text-left">Trámite</th>
-                    <th class="px-4 py-2 text-left">Folio</th>
-                    <th class="px-4 py-2 text-left">Fecha de solicitud</th>
-                    <th class="px-4 py-2 text-left">Estado</th>
-                    <th class="px-4 py-2 text-center">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
-                @forelse ($tramites as $tramite)
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-4 py-2">{{ $tramite->tipo_tramite_nombre }}</td>
-                        <td class="px-4 py-2">{{ $tramite->folio ?? '—' }}</td>
-                        <td class="px-4 py-2">{{ $tramite->created_at }}</td>
-                        <td class="px-4 py-2">{{ $tramite->catalogo_estatus_estado ?? 'Pendiente' }}</td>
-                        <td class="px-4 py-2 text-center space-x-2">
-                            <a href="{{ route('tramites.validar', $tramite->id) }}" class="text-green-600 hover:underline">Abrir</a>
-                        </td>
-                    </tr>
-                @empty
+    {{-- TAB 1: Trámites en curso --}}
+    <div x-show="tab === 'curso'" x-cloak>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100 text-gray-700 text-sm font-semibold">
                     <tr>
-                        <td colspan="5" class="px-4 py-6 text-center text-gray-500 italic">No hay trámites asignados para verificación.</td>
+                        <th class="px-4 py-2 text-left">Trámite</th>
+                        <th class="px-4 py-2 text-left">Folio</th>
+                        <th class="px-4 py-2 text-left">Fecha de solicitud</th>
+                        <th class="px-4 py-2 text-left">Estado</th>
+                        <th class="px-4 py-2 text-center">Acciones</th>
                     </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                    @forelse ($tramites as $tramite)
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-4 py-2">{{ $tramite->tipo_tramite_nombre }}</td>
+                            <td class="px-4 py-2">{{ $tramite->folio ?? '—' }}</td>
+                            <td class="px-4 py-2">{{ $tramite->created_at }}</td>
+                            <td class="px-4 py-2">{{ $tramite->catalogo_estatus_estado ?? 'Pendiente' }}</td>
+                            <td class="px-4 py-2 text-center space-x-2">
+                                <a href="{{ route('tramites.validar', $tramite->id) }}" class="text-green-600 hover:underline">Abrir</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-4 py-6 text-center text-gray-500 italic">No hay trámites en curso.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{-- TAB 2: Trámites finalizados --}}
+    <div x-show="tab === 'finalizados'" x-cloak>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100 text-gray-700 text-sm font-semibold">
+                    <tr>
+                        <th class="px-4 py-2 text-left">Trámite</th>
+                        <th class="px-4 py-2 text-left">Folio</th>
+                        <th class="px-4 py-2 text-left">Fecha de solicitud</th>
+                        <th class="px-4 py-2 text-left">Estado</th>
+                        <th class="px-4 py-2 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                    @forelse ($tramitesFinalizados as $tramite)
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-4 py-2">{{ $tramite->tipo_tramite_nombre }}</td>
+                            <td class="px-4 py-2">{{ $tramite->folio ?? '—' }}</td>
+                            <td class="px-4 py-2">{{ $tramite->created_at }}</td>
+                            <td class="px-4 py-2">{{ $tramite->catalogo_estatus_estado ?? 'Finalizado' }}</td>
+                            <td class="px-4 py-2 text-center space-x-2">
+                               <a href="{{ route('tramites.ver', $tramite->id) }}" class="text-indigo-600 hover:underline">Ver</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-4 py-6 text-center text-gray-500 italic">No hay trámites finalizados.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>

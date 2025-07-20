@@ -5,12 +5,22 @@
 
 
     @if($tramite_estatus == 5)
+        @if($modo_edicion)
         <div class="inline-block px-3 py-1 text-sm font-semibold text-red-700 bg-red-100 border border-red-300 rounded-lg">
             ⚠ Es necesario modificar la información de este paso
+               <p><Strong>Observaciones del verificador: <span class="text-sm font-semibold text-red-700">{{ $observaciones }}</span></Strong></p>
         </div>
+
+        @else
+        <div class="inline-block px-3 py-1 text-sm font-semibold text-green-700 bg-green-100 border border-green-300 rounded-lg">
+            ✅ Información del solicitante
+               <p><Strong>Observaciones del verificador: <span class="text-sm font-semibold text-green-700">{{ $observaciones }}</span></Strong></p>
+        </div>
+        @endif
     @endif
 
 
+    <hr>
 
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -13,6 +13,9 @@ class ResolucionTramite extends Component
     public $rutaPdf;
     public $resolucion_prevencion;
     public $catalogoResoluciones;
+    public $archivoCer;
+    public $archivoKey;
+    public $passwordKey;
 
     public function mount($tramiteId)
     {
@@ -22,6 +25,8 @@ class ResolucionTramite extends Component
             ->first();
 
         $this->catalogoResoluciones = CatalogoResolucion::all();
+
+
 
         // Suponiendo que ya tienes la resolución generada y guardada:
         $this->rutaPdf = "/storage/resoluciones/resolucion_{$tramiteId}.pdf"; // ajusta según tu ruta real

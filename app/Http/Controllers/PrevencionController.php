@@ -2,23 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CargoUsers;
+use App\Models\CatalogoResolucion;
+use App\Models\PrevencionesTramite;
+use App\Services\PdfService;
 use App\Services\PrevencionService;
 use Illuminate\Http\Request;
+use App\Models\TramiteC;
+use App\Models\User;
+use App\Services\QrCodeService;
+use Illuminate\Support\Facades\Auth;
+use App\Models\TramiteResoluciones;
+
 
 class PrevencionController extends Controller
 {
     //
     protected $prevencionService;
+    protected $pdfService;
 
     public $tramiteId;
     public $pasoId;
     public $es_valido = 0;
     public $observaciones = '';
+    public $tipo_resolucion;
+    public $motivo_resolucion;
 
 
-    public function __construct(PrevencionService $prevencionService)
+    public function __construct(PrevencionService $prevencionService, PdfService $pdfService)
     {
         $this->prevencionService = $prevencionService;
+        $this->pdfService = $pdfService;
     }
 
     public function guardarPrevencion(Request $request)
@@ -49,6 +63,67 @@ class PrevencionController extends Controller
 
     }
 
+    public function vistaPreviaResolucion(Request $request, QrCodeService $qrService)
+    {
+        $this->tramiteId = $request->input('tramite_id');
+
+        $tramite = TramiteC::where('id', $this->tramiteId)->first();
+
+        $this->tipo_resolucion = $request->input('tipo_resolucion');
+        $this->motivo_resolucion = $request->input('motivo_resolucion');
+
+        $tipo_resolucion = CatalogoResolucion::find($this->tipo_resolucion);
+
+        //obtener persona firmante
+
+        $persona_firmante = User::where('id', Auth::id())->first();
+
+        $nombre_persona_firmante = $persona_firmante->name;
+
+        //Cargo persona firmante
+        $cargo_persona_firmante = CargoUsers::with('cargo')
+        ->where('user_id', Auth::id())->first();
+
+        $cargo = $cargo_persona_firmante->cargo;
+
+        $qrSvg = $qrService->generarQrBase64DesdeRuta('resumen-tramite.show', ['id' => $tramite->id], 150);
+
+        //Si es una prevencion, obtener las observaciones por pasos
+
+        $pasos = PrevencionesTramite::with('paso')
+        ->where('tramite_id', $tramite->id)
+        ->orderBy('catalogo_paso_id', 'asc')
+            ->get();
+
+
+
+        $data = [
+            'tramiteId' => $this->tramiteId,
+            'tramite' => $tramite,
+            'tipo_resolucion' => $tipo_resolucion->nombre,
+            'motivo_resolucion' => $this->motivo_resolucion,
+            'persona_firmante' => $nombre_persona_firmante,
+            'cargo_persona_firmante' => $cargo ? $cargo->nombre_cargo : 'No disponible',
+            'qrSvg' => $qrSvg,
+            'pasos' => $pasos,
+            'tipo_resolucion_id' => $tipo_resolucion->id,
+        ];
+
+
+
+
+
+
+        $url = $this->pdfService->generarPdfVistaPreviaResolucion($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'PDF generado correctamente',
+            'url' => $url,
+        ]);
+    }
+
+
 
     public function obtenerPrevencion(Request $request){
 
@@ -68,6 +143,20 @@ class PrevencionController extends Controller
                 'message' => 'No se encontró ninguna prevención para este trámite y paso.',
             ], 404);
         }
+
+    }
+
+
+    public function obtenerResolucionPrevencionVerificador(Request $request)
+    {
+        $this->tramiteId = $request->input('tramite_id');
+
+        $prevencion_resolucion = $this->prevencionService->obtenerResolucionPrevencionVerificador($this->tramiteId);
+
+        return response()->json([
+            'message' => 'Resolución de prevención obtenida correctamente.',
+            'resolucion' => $prevencion_resolucion,
+        ]);
 
     }
 

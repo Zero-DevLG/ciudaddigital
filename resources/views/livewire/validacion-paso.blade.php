@@ -38,7 +38,7 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('Script de validación cargado');
+    //console.log('Script de validación cargado');
 
     function iniciarValidacion(pasoId, tramiteId) {
         const uid = 'paso_' + pasoId;
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Datos obtenidos para paso:', pasoId, data);
+            //console.log('Datos obtenidos para paso:', pasoId, data);
             const prevencion = data.prevencion;
 
             if (prevencion) {
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Respuesta al guardar paso', pasoId, data);
+                    //console.log('Respuesta al guardar paso', pasoId, data);
                     if (data.prevencion && typeof data.prevencion.es_valido !== 'undefined') {
                         actualizarColorFondo(data.prevencion.es_valido.toString());
                     } else {

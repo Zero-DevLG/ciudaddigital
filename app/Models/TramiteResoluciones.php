@@ -15,6 +15,7 @@ class TramiteResoluciones extends Model
         'tramite_id',
         'documento_id',
         'tipo_resolucion_id',
+        'fecha_emision'
     ];
 
     // Relaciones
@@ -27,6 +28,8 @@ class TramiteResoluciones extends Model
     {
         return $this->belongsTo(DocumentosTramite::class, 'documento_id');
     }
+
+
 
     public function tipoResolucion()
     {

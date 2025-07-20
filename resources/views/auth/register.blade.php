@@ -24,9 +24,9 @@
         }
 
         #btn-registrar {
-            background-color: transparent;
-            border: 2px solid #337ab7;
-            color: #337ab7;
+            background-color: #9D2449;
+            border: 2px solid #9D2449;
+            color: white;
             padding: 10px 20px;
             font-weight: bold;
             border-radius: 5px;
@@ -34,7 +34,7 @@
         }
 
         #btn-registrar:hover:enabled {
-            background-color: #337ab7;
+            background-color: #9D2449;
             color: #fff;
         }
 
@@ -77,7 +77,7 @@
         }
 
         .btn-validate {
-            background-color: #2563eb;
+            background-color: #9D2449;
             color: white;
             border: none;
             padding: 0.5rem 0.8rem;
@@ -88,11 +88,11 @@
         }
 
         .btn-validate:hover {
-            background-color: #1e40af;
+            background-color: #54051c;
         }
 
         .btn-submit {
-            background-color: #2563eb;
+            background-color: #9D2449;
             color: white;
             padding: 0.6rem 1.2rem;
             border: none;
@@ -104,7 +104,7 @@
         }
 
         .btn-submit:hover {
-            background-color: #1e40af;
+            background-color: #9D2449;
         }
 
         .link {
@@ -214,7 +214,7 @@
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content shadow-lg border-0">
-                    <div class="modal-header bg-primary text-white">
+                    <div class="modal-header bg-[#9D2449] text-white">
                         <h5 class="modal-title" id="infoCurpModalLabel">
                             <i class="bi bi-info-circle-fill me-2"></i> ¿Por qué solo una cuenta por CURP?
                         </h5>

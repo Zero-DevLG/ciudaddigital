@@ -77,3 +77,13 @@ Route::get('tramites/{id}/ver', [TramitesController::class, 'verTramite'])->name
 Route::post('/validaciones/guardar', [PrevencionController::class, 'guardarPrevencion'])->name('validaciones.guardar');
 
 Route::post('/validaciones/obtener', [PrevencionController::class, 'obtenerPrevencion'])->name('validaciones.obtener');
+
+Route::post('/verificador/obtener-resolucion-prevencion', [PrevencionController::class, 'obtenerResolucionPrevencionVerificador'])->name('verificador.obtener_resolucion_prevencion');
+
+Route::post('/verificador/vista-previa-resolucion',[PrevencionController::class, 'vistaPreviaResolucion'])->name('verificador.vista_previa_resolucion');
+
+Route::post('/verificador/firmar-resolucion', [TramitesController::class, 'firmarResolucion']);
+
+Route::post('/verificador/obtener-resolucion-temporal', [TramitesController::class, 'obtenerResolucionTemporal'])->name('verificador.obtener_resolucion_temporal');
+
+Route::post('/verificador/finalizar-verificacion',[TramitesController::class, 'finalizarVerificacion'])->name('verificador.finalizar_verificacion');

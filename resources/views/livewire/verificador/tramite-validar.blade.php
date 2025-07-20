@@ -8,15 +8,23 @@
     <h6 class="font-bold text-[#9D2449] mb-4">{{ $tramite->folio }}</h6>
     <p class="text-gray-600 mb-4">Fecha de inicio: <span class="font-semibold">{{ $tramite->tramite_inicio }}</span></p>
 
+    @if($resolucion_prevencion)
+        <div class="mb-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded">
+            <h6 class="text-yellow-800 font-semibold">Este tramite ya cuenta con una prevencion</h6>
+            <p class="text-yellow-700">{{ $resolucion_prevencion->descripcion }}</p>
+             <a href="{{ asset('storage/' . $resolucion_prevencion->documento->url) }}" class="text-[#9D2449] hover:underline" target="_blank">Descargar PDF</a>
+        </div>
+    @endif
+
     {{-- Instrucciones --}}
     <div class="mb-6 p-4 bg-[#E6F0FA] border-l-4 border-[#3B82F6] rounded shadow-sm">
         <h2 class="text-[#1E3A8A] font-semibold text-lg mb-1">Guía para completar el trámite</h2>
         <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
             <li>Completa cada paso en orden.</li>
             <li>Verifica cuidadosamente los datos ingresados.</li>
-            <li>Llena los campos obligatorios.</li>
-            <li>Guarda tus avances si es posible.</li>
-            <li>Consulta al área de soporte en caso de dudas.</li>
+            <li>Genera la resolución.</li>
+            <li>Descarga la resolución y firmala con firma autografa.</li>
+            <li>Sube el documento firmado y finaliza ek proceso de verificación</li>
         </ul>
     </div>
 

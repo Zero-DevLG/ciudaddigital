@@ -23,9 +23,8 @@
                         <td class="px-4 py-2 text-center space-x-2">
                            @if($tramite->cat_estatus_id == 5)
                             <a href="{{ route('tramites.uso_suelo', $tramite->id) }}" class="text-green-600 hover:underline">Editar</a>
-                            @else
-                            <a href="{{ route('tramites.ver', $tramite->id) }}" class="text-indigo-600 hover:underline">Ver</a>
                             @endif
+                            <a href="{{ route('tramites.ver', $tramite->id) }}" class="text-indigo-600 hover:underline">Ver</a>
 
 
                         </td>

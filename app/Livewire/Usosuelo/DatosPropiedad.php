@@ -7,9 +7,11 @@ use App\Models\CatalogoUsoSuelo;
 use App\Models\Domicilios;
 use App\Models\Predio;
 use App\Models\PropiedadTramite;
+use App\Models\TramiteC;
 use Database\Seeders\CatalogoTipoPropiedad;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Models\PrevencionesTramite;
 
 class DatosPropiedad extends Component
 {
@@ -46,6 +48,10 @@ class DatosPropiedad extends Component
     public $n_exterior;
     public $n_interior;
     public $cp;
+    public $modo_edicion = false;
+    public $tramite_estatus;
+    public $observaciones;
+    public $prevencion_paso;
 
     protected $listeners = ['setCoordinates', 'guardarDatos'];
 
@@ -73,6 +79,39 @@ class DatosPropiedad extends Component
 
 
         $this->tramiteId = $tramiteId;
+
+        $tramite = TramiteC::find($this->tramiteId);
+
+        $this->tramite_estatus = $tramite->cat_estatus_id;
+
+        $prevencion_paso = PrevencionesTramite::where('tramite_id', $this->tramiteId)
+            ->where('catalogo_paso_id', 2)
+            ->first();
+
+
+          $this->observaciones = $prevencion_paso->observaciones;
+
+
+         $estatus_tramite_f = in_array((int)$this->tramite_estatus, [1, 5]);
+
+           if ($estatus_tramite_f) {
+
+             if ($prevencion_paso) {
+                $this->prevencion_paso = $prevencion_paso->catalogo_paso_id;
+                if($prevencion_paso->es_valido === 0){
+                    $this->modo_edicion = true; // Permitir edición si hay una prevención válida
+                } else {
+                    $this->modo_edicion = false; // No permitir edición si no hay prevención válida
+                }
+            } else {
+                $prevencion_paso = null;
+            }
+        } else {
+            $this->modo_edicion = false; // No permitir edición en otros estatus
+        }
+
+
+
         $this->catalogoUsos = CatalogoUsoSuelo::all();
         $this->catalogoPropuestos = $this->catalogoUsos;
         $this->catalogoTipos = CatalogoPropiedad::all();

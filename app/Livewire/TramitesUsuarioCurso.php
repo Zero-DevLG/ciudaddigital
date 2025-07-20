@@ -21,7 +21,7 @@ class TramitesUsuarioCurso extends Component
             ->leftJoin('tipos_tramite as tt', 't.tipo_tramite_id', '=', 'tt.id')
             ->leftJoin('catalogo_estatus as ce', 't.cat_estatus_id', '=', 'ce.id')
             ->where('tu.usuario_id', $usuario->id)
-            ->where('cat_estatus_id', '=', [2,5])
+            ->whereIn('cat_estatus_id', [2,5])
             ->select(
                 't.id',
                 't.folio',
