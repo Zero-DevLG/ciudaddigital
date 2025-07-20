@@ -1,41 +1,54 @@
 <x-app-layout>
 
-    <div style="background-color: #eae8de;" class="flex h-[calc(100vh-4rem)] overflow-hidden px-4 py-4 gap-6">
+    <div style="background-color: #eae8de;" class="min-h-screen w-full px-4 sm:px-6 lg:px-8 py-6 space-y-8">
 
-        <main class="flex-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow overflow-y-auto flex flex-col">
 
-            <div class=" px-6 py-12 bg-[#FAF9F7] text-gray-800">
+        <main class="flex-1 bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md overflow-y-auto flex flex-col space-y-6">
 
-                <div class="bg-[#E7EBF0] border-l-4 border-[#E5B56F] p-5 rounded shadow-sm text-sm">
-                    <div class="flex items-start gap-3">
 
-                        <div class="text-[#3C4653]">
-                            <p class="font-semibold text-[#9D2449]">Nota informativa</p>
-                            <p class="mt-1">
-                                Esta visualización confirma que el trámite con folio <strong>{{ $tramite->folio }}</strong> está registrado oficialmente en la plataforma institucional.
-                                La información mostrada es de carácter informativo y refleja el estado vigente del expediente.
-                            </p>
-                            <p class="mt-2">
-                                Para consultar detalles adicionales, como resoluciones u observaciones técnicas, acceda a su perfil y seleccione el trámite correspondiente desde su panel.
-                            </p>
-                        </div>
+            <div class="px-4 sm:px-6 py-6 sm:py-12 bg-[#FAF9F7] text-gray-800">
+
+               <div class="bg-[#E7EBF0] border-l-4 border-[#E5B56F] p-4 sm:p-6 rounded shadow-sm text-sm max-w-4xl mx-auto">
+                <div class="flex flex-col sm:flex-row items-start gap-3">
+                    <div class="text-[#3C4653]">
+                        <p class="font-semibold text-[#9D2449]">Nota informativa</p>
+                        <p class="mt-1">
+                        Esta visualización confirma que el trámite con folio <strong>{{ $tramite->folio }}</strong> está registrado oficialmente en la plataforma institucional.
+                        La información mostrada es de carácter informativo y refleja el estado vigente del expediente.
+                        </p>
+                        <p class="mt-2">
+                            Para consultar detalles adicionales, como resoluciones u observaciones técnicas, acceda a su perfil y seleccione el trámite correspondiente desde su panel.
+                        </p>
                     </div>
                 </div>
+            </div>
+
 
                 <br>
 
                 {{-- Folio y estatus --}}
-                <div class="bg-[#FDF5EF] border-l-4 border-[#E5B56F] p-6 mb-10 rounded shadow-sm">
-                    <p class="text-xl font-bold text-[#9D2449] mb-1">Folio del Trámite: <span class="font-normal text-gray-900">{{ $tramite->folio }}</span></p>
-                    <p class="text-sm text-gray-700">Estatus actual: <strong class="text-[#9D2449]">{{ $estatus_tramite->estado }}</strong></p>
-                    <p class="text-sm text-gray-500">Fecha de inicio: {{ $tramite->tramite_inicio }}</p>
-                    <p class="text-sm text-gray-500">Fecha de término: {{ $tramite->tramite_termino ?? '—' }}</p>
+               <div class="bg-[#FDF5EF] border-l-4 border-[#E5B56F] p-4 sm:p-6 mb-10 rounded shadow-sm max-w-4xl mx-auto">
+                    <p class="text-lg sm:text-xl font-bold text-[#9D2449] mb-2">
+                        Folio del Trámite: <span class="font-normal text-gray-900">{{ $tramite->folio }}</span>
+                    </p>
+                    <p class="text-sm sm:text-base text-gray-700 mb-1">
+                        Estatus actual: <strong class="text-[#9D2449]">{{ $estatus_tramite->estado }}</strong>
+                    </p>
+                    <p class="text-sm sm:text-base text-gray-500 mb-1">
+                        Fecha de inicio: {{ $tramite->tramite_inicio }}
+                    </p>
+                    <p class="text-sm sm:text-base text-gray-500 mb-4">
+                        Fecha de término: {{ $tramite->tramite_termino ?? '—' }}
+                    </p>
 
-                    <p class="text-sm text-gray-500"><strong>Descargar acuse de solicitud</strong></p>
-                      <a href="{{ asset('storage/' . $acuse_solicitud->url) }}" class="text-[#9D2449] hover:underline" target="_blank">Descargar PDF</a>
-
-
+                    <p class="text-sm sm:text-base text-gray-500 font-semibold mb-1">
+                        Descargar acuse de solicitud
+                    </p>
+                    <a href="{{ asset('storage/' . $acuse_solicitud->url) }}" target="_blank" class="text-[#9D2449] hover:underline text-sm sm:text-base block">
+                        Descargar PDF
+                    </a>
                 </div>
+
 
                 {{-- DATOS DEL SOLICITANTE --}}
                 <section class="mb-10 bg-white rounded-lg border shadow p-6">
