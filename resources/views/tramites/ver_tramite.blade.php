@@ -49,105 +49,104 @@
                     </a>
                 </div>
 
+                    <section class="mb-10 bg-white rounded-lg border shadow p-4 sm:p-6 max-w-4xl mx-auto">
+                        <h2 class="text-xl sm:text-2xl font-semibold text-[#9D2449] mb-6 flex items-center gap-2">Datos del Solicitante</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm sm:text-base">
+                            <div>
+                                <p class="font-medium text-[#9D2449] mb-1">Nombre completo</p>
+                                <p>{{ $persona->nombre }} {{ $persona->apellido_paterno }} {{ $persona->apellido_materno }}</p>
+                            </div>
 
-                {{-- DATOS DEL SOLICITANTE --}}
-                <section class="mb-10 bg-white rounded-lg border shadow p-6">
-                    <h2 class="text-2xl font-semibold text-[#9D2449] mb-6 flex items-center gap-2">Datos del Solicitante</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                        <div>
-                            <p class="font-medium text-[#9D2449]">Nombre completo</p>
-                            <p>{{ $persona->nombre }} {{ $persona->apellido_paterno }} {{ $persona->apellido_materno }}</p>
-                        </div>
+                            <div>
+                                <p class="font-medium text-[#9D2449] mb-1">CURP</p>
+                                <p>
+                                    @auth
+                                        {{ $persona->curp }}
+                                    @else
+                                        <em class="text-gray-500 italic" title="Este dato es privado">Información confidencial 🔒</em>
+                                    @endauth
+                                </p>
+                            </div>
 
-                        <div>
-                            <p class="font-medium text-[#9D2449]">CURP</p>
-                            <p>
-                                @auth
-                                    {{ $persona->curp }}
-                                @else
-                                    <em class="text-gray-500 italic" title="Este dato es privado">Información confidencial 🔒</em>
-                                @endauth
-                            </p>
-                        </div>
+                            <div>
+                                <p class="font-medium text-[#9D2449] mb-1">Teléfono</p>
+                                <p>
+                                    @auth
+                                        {{ $persona->telefono }}
+                                    @else
+                                        <em class="text-gray-500 italic" title="Este dato es privado">Información confidencial 🔒</em>
+                                    @endauth
+                                </p>
+                            </div>
 
-                        <div>
-                            <p class="font-medium text-[#9D2449]">Teléfono</p>
-                            <p>
-                                @auth
-                                    {{ $persona->telefono }}
-                                @else
-                                    <em class="text-gray-500 italic" title="Este dato es privado">Información confidencial 🔒</em>
-                                @endauth
-                            </p>
+                            <div>
+                                <p class="font-medium text-[#9D2449] mb-1">Correo electrónico</p>
+                                <p>
+                                    @auth
+                                        {{ $persona->correo_electronico }}
+                                    @else
+                                        <em class="text-gray-500 italic" title="Este dato es privado">Información confidencial 🔒</em>
+                                    @endauth
+                                </p>
+                            </div>
                         </div>
-
-                        <div>
-                            <p class="font-medium text-[#9D2449]">Correo electrónico</p>
-                            <p>
-                                @auth
-                                    {{ $persona->correo_electronico }}
-                                @else
-                                    <em class="text-gray-500 italic" title="Este dato es privado">Información confidencial 🔒</em>
-                                @endauth
-                            </p>
-                        </div>
-                    </div>
-                </section>
+                    </section>
 
                 {{-- PREDIO --}}
-                <section class="mb-10 bg-[#FCFAF8] rounded-lg border shadow p-6">
-                    <h2 class="text-2xl font-semibold text-[#9D2449] mb-6 flex items-center gap-2"> Información del Predio</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                <section class="mb-10 bg-[#FCFAF8] rounded-lg border shadow p-4 sm:p-6 max-w-4xl mx-auto">
+                    <h2 class="text-xl sm:text-2xl font-semibold text-[#9D2449] mb-6 flex items-center gap-2">Información del Predio</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm sm:text-base">
                         <div>
-                            <p class="font-medium text-[#9D2449]">Clave catastral</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Clave catastral</p>
                             <p>{{ $predio->clave_catastral }}</p>
                         </div>
                         <div>
-                            <p class="font-medium text-[#9D2449]">Ubicación</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Ubicación</p>
                             <p>{{ $domicilio_predio->calle }}, {{ $domicilio_predio->delegacion_municipio }}, {{ $domicilio_predio->estado }}, C.P. {{ $domicilio_predio->cp }}</p>
                         </div>
                         <div>
-                            <p class="font-medium text-[#9D2449]">Superficie</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Superficie</p>
                             <p>{{ $predio->superficie_total }} m²</p>
                         </div>
                         <div>
-                            <p class="font-medium text-[#9D2449]">Uso actual</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Uso actual</p>
                             <p>{{ $uso_suelo_actual->tipo_uso }}</p>
                         </div>
                         <div>
-                            <p class="font-medium text-[#9D2449]">Uso solicitado</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Uso solicitado</p>
                             <p>{{ $uso_suelo_solicitado->tipo_uso }}</p>
                         </div>
                         <div>
-                            <p class="font-medium text-[#9D2449]">Tipo de propiedad</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Tipo de propiedad</p>
                             <p>{{ $tipo_propiedad->tipo_propiedad }}</p>
                         </div>
                     </div>
                 </section>
 
+
                 {{-- CARACTERÍSTICAS DEL PROYECTO --}}
-                <section class="mb-10 bg-white rounded-lg border shadow p-6">
-                    <h2 class="text-2xl font-semibold text-[#9D2449] mb-6 flex items-center gap-2">Características del Proyecto</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                <section class="mb-10 bg-white rounded-lg border shadow p-4 sm:p-6 max-w-4xl mx-auto">
+                    <h2 class="text-xl sm:text-2xl font-semibold text-[#9D2449] mb-6 flex items-center gap-2">Características del Proyecto</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm sm:text-base">
                         <div>
-                            <p class="font-medium text-[#9D2449]">Descripción general</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Descripción general</p>
                             <p>{{ $tramite_proyecto->descripcion_general }}</p>
                         </div>
                         <div>
-                            <p class="font-medium text-[#9D2449]">Impacto estimado</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Impacto estimado</p>
                             <p>{{ $impacto_estimado->impacto }}</p>
                         </div>
                         <div>
-                            <p class="font-medium text-[#9D2449]">Tipo de construcción</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Tipo de construcción</p>
                             <p>{{ $tipo_construccion->tipo_construccion }}</p>
                         </div>
                         <div>
-                            <p class="font-medium text-[#9D2449]">Niveles</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Niveles</p>
                             <p>{{ $tramite_proyecto->niveles }}</p>
                         </div>
 
                         <div class="md:col-span-2">
-                            <p class="font-medium text-[#9D2449]">Infraestructura seleccionada</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Infraestructura seleccionada</p>
                             <ul class="list-disc list-inside ml-4 mt-1">
                                 @foreach ($car_proyecto->infraestructuras as $infra)
                                     <li>{{ $infra->infraestructura }}</li>
@@ -156,84 +155,100 @@
                         </div>
 
                         <div class="md:col-span-2">
-                            <p class="font-medium text-[#9D2449]">Plano</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Plano</p>
                             <p>{{ $plano_documento ? 'Archivo cargado: ' . $plano_documento->nombre_documento : 'No se adjuntó un plano' }}</p>
                         </div>
 
                         <div class="md:col-span-2">
-                            <p class="font-medium text-[#9D2449]">Estudio de impacto ambiental</p>
+                            <p class="font-medium text-[#9D2449] mb-1">Estudio de impacto ambiental</p>
                             <p>{{ $estudio_impacto_documento ? 'Archivo cargado: ' . $estudio_impacto_documento->nombre_documento : 'No se adjuntó estudio' }}</p>
                         </div>
                     </div>
                 </section>
 
                 {{-- DOCUMENTOS ADJUNTOS --}}
-                <section class="mb-12 bg-[#FCFAF8] rounded-lg border shadow p-6">
-                    <h2 class="text-2xl font-semibold text-[#9D2449] mb-6"> Documentos Adjuntos</h2>
-                    <ul class="list-disc list-inside text-sm ml-4">
-                        @forelse ($documentos_tramite as $documento)
-                            <li>Archivo cargado: {{ $documento->nombre_documento }}</li>
-                        @empty
-                            <li>No se han adjuntado documentos</li>
-                        @endforelse
-                    </ul>
-                </section>
+             <section class="mb-12 bg-[#FCFAF8] rounded-lg border shadow p-4 sm:p-6 max-w-4xl mx-auto">
+                <h2 class="text-xl sm:text-2xl font-semibold text-[#9D2449] mb-6">Documentos Adjuntos</h2>
+                <ul class="list-disc list-inside text-sm sm:text-base ml-5">
+                    @forelse ($documentos_tramite as $documento)
+                        <li class="mb-1">Archivo cargado: {{ $documento->nombre_documento }}</li>
+                    @empty
+                        <li class="italic text-gray-500">No se han adjuntado documentos</li>
+                    @endforelse
+                </ul>
+            </section>
 
                 {{-- Resoluciones --}}
 
                 @if($resoluciones)
 
-                 <section class="mb-12 bg-white rounded-lg border shadow p-6">
-
-                    <h2 class="text-2xl font-semibold text-[#9D2449] mb-6">Resoluciones</h2>
-                    <hr>
+                 <section class="mb-12 bg-white rounded-lg border shadow p-4 sm:p-6 max-w-4xl mx-auto">
+                    <h2 class="text-xl sm:text-2xl font-semibold text-[#9D2449] mb-6">Resoluciones</h2>
+                    <hr class="mb-6">
 
                     @if($resolucion_prevencion)
-                        <div class="mb-6">
-                            <p class="text-sm text-gray-700 mb-2">Tipo de resolución: <strong class="text-[#9D2449]">{{ $datos_prevencion['tipo_resolucion'] }}</strong></p>
-                            <p class="text-sm text-gray-700 mb-2">Fecha de emision: {{ $datos_prevencion['fecha_emision'] }}</p>
-                            @if(!$resolucion_prevencion->deleted_at)
-                            <p class="text-sm text-gray-700"><strong>Su tramite tiene una resolucion de prevención, debera subsanarla  dentro de los 15 dias habiles despues de su emision</strong></p>
+                        <div class="mb-6 text-sm sm:text-base text-gray-700">
+                            @auth
+                                <p class="mb-2">Tipo de resolución: <strong class="text-[#9D2449]">{{ $datos_prevencion['tipo_resolucion'] }}</strong></p>
+                                <p class="mb-2">Fecha de emisión: {{ $datos_prevencion['fecha_emision'] }}</p>
+                                @if(!$resolucion_prevencion->deleted_at)
+                                    <p><strong>Su trámite tiene una resolución de prevención, deberá subsanarla dentro de los 15 días hábiles después de su emisión.</strong></p>
+                                @else
+                                    <p class="text-green-700 font-semibold">Prevención subsanada</p>
+                                @endif
+
+                                <h3 class="text-lg font-semibold text-[#9D2449] mt-6 mb-2">Pasos del trámite</h3>
+                                <ul class="list-disc list-inside ml-5 mb-4">
+                                    @foreach($datos_prevencion['tramite_pasos'] as $paso)
+                                        <li>
+                                            {{ $paso->paso->nombre_paso }}
+                                            @if($paso->es_valido)
+                                                <span class="text-green-600"> - Válido</span>
+                                            @else
+                                                <span class="text-red-600"> - No válido</span>
+                                            @endif
+                                            @if($paso->observaciones)
+                                                <p class="text-gray-600 mt-1">Observaciones: {{ $paso->observaciones }}</p>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+
+                                <p class="font-semibold">Descargar documento de resolución</p>
+                                <a href="{{ asset('storage/' . $resolucion_prevencion->documento->url) }}" class="text-[#9D2449] hover:underline" target="_blank" rel="noopener noreferrer">Descargar PDF</a>
                             @else
-                             <p class="text-sm text-green-700"><strong>Prevencion subsanada</strong></p>
-                            @endif
-                        </div>
-
-                        <div class="mb-6">
-                            <h3 class="text-lg font-semibold text-[#9D2449] mb-2">Pasos del trámite</h3>
-                            <ul class="list-disc list-inside ml-4">
-                                @foreach($datos_prevencion['tramite_pasos'] as $paso)
-                                    <li>{{ $paso->paso->nombre_paso }}
-                                        @if($paso->es_valido)
-                                            <span class="text-green-600"> - Válido</span>
-                                        @else
-                                            <span class="text-red-600"> - No válido</span>
-                                        @endif
-                                        @if($paso->observaciones)
-                                            <p class="text-sm text-gray-600 mt-1">Observaciones: {{ $paso->observaciones }}</p>
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </ul>
-                            <p>Descargar documento de resolución</p>
-                            <a href="{{ asset('storage/' . $resolucion_prevencion->documento->url) }}" class="text-[#9D2449] hover:underline" target="_blank">Descargar PDF</a>
-
+                                <div class="flex items-center gap-2 text-gray-600 italic">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0-1.104-.896-2-2-2s-2 .896-2 2v2h4v-2z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 11h14a1 1 0 011 1v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7a1 1 0 011-1z" />
+                                    </svg>
+                                    <span>Inicia sesión para ver los detalles y descargar el documento.</span>
+                                </div>
+                            @endauth
                         </div>
                         <hr>
                     @endif
+
                     @if($resolucion_f)
-                     <div class="mb-6">
-                            <p class="text-sm text-gray-700 mb-2">Tipo de resolución: <strong class="text-[#9D2449]">{{ $resolucion_f->tipoResolucion->nombre }}</strong></p>
-                            <p class="text-sm text-gray-700 mb-2">Fecha de emision: {{ $resolucion_f->fecha_emision }}</p>
-                        </div>
-
-                        <div class="mb-6">
-                            <p>Descargar documento de resolución</p>
-                            <a href="{{ asset('storage/' . $resolucion_f->documento->url) }}" class="text-[#9D2449] hover:underline" target="_blank">Descargar PDF</a>
-
+                        <div class="mb-6 text-sm sm:text-base text-gray-700">
+                            @auth
+                                <p class="mb-2">Tipo de resolución: <strong class="text-[#9D2449]">{{ $resolucion_f->tipoResolucion->nombre }}</strong></p>
+                                <p class="mb-2">Fecha de emisión: {{ $resolucion_f->fecha_emision }}</p>
+                                <p class="font-semibold">Descargar documento de resolución</p>
+                                <a href="{{ asset('storage/' . $resolucion_f->documento->url) }}" class="text-[#9D2449] hover:underline" target="_blank" rel="noopener noreferrer">Descargar PDF</a>
+                            @else
+                                <div class="flex items-center gap-2 text-gray-600 italic">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0-1.104-.896-2-2-2s-2 .896-2 2v2h4v-2z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 11h14a1 1 0 011 1v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7a1 1 0 011-1z" />
+                                    </svg>
+                                    <span>Inicia sesión para ver los detalles y descargar el documento.</span>
+                                </div>
+                            @endauth
                         </div>
                     @endif
-                 </section>
+                    </section>
+
                 @endif
 
 
