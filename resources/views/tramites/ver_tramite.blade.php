@@ -1,278 +1,149 @@
 <x-app-layout>
+  <div class="min-h-screen bg-gray-50 flex flex-col justify-center px-4 py-8">
+    <main class="bg-white max-w-md w-full mx-auto rounded-lg shadow-md p-6 flex flex-col gap-6">
 
-    <div style="background-color: #eae8de;" class="min-h-screen w-full px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+      {{-- Encabezado --}}
+      <header class="text-center">
+        <h1 class="text-2xl font-bold text-[#9D2449] mb-2">Validación Oficial del Trámite</h1>
+        <p class="text-gray-600 text-sm">
+          Folio: <strong class="text-gray-800">{{ $tramite->folio }}</strong>
+        </p>
+        <p class="text-gray-600 text-sm mt-1">
+          Estado: <span class="font-semibold text-[#9D2449]">{{ $estatus_tramite->estado }}</span>
+        </p>
+      </header>
 
+      {{-- Nota informativa --}}
+      <section class="bg-[#FAF9F7] border-l-4 border-[#E5B56F] p-4 rounded shadow-sm text-gray-700 text-sm">
+        <p>
+          Esta vista confirma que el trámite con folio <strong>{{ $tramite->folio }}</strong> está registrado oficialmente y es válido.
+        </p>
+        <p class="mt-2">
+          Para detalles adicionales, consulta tu perfil con acceso autorizado.
+        </p>
+      </section>
 
-        <main class="flex-1 bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md overflow-y-auto flex flex-col space-y-6">
+      {{-- Datos del Solicitante --}}
+      <section class="bg-white border rounded-lg shadow p-4">
+        <h2 class="text-lg font-semibold text-[#9D2449] mb-4">Datos del Solicitante</h2>
+        <dl class="grid grid-cols-1 gap-3 text-sm text-gray-700">
+          <div>
+            <dt class="font-medium">Nombre completo</dt>
+            <dd>{{ $persona->nombre }} {{ $persona->apellido_paterno }} {{ $persona->apellido_materno }}</dd>
+          </div>
+          <div>
+            <dt class="font-medium">CURP</dt>
+            <dd>
+              @auth
+                {{ $persona->curp }}
+              @else
+                <em class="italic text-gray-400 flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0-1.104-.896-2-2-2s-2 .896-2 2v2h4v-2z" /><path stroke-linecap="round" stroke-linejoin="round" d="M5 11h14a1 1 0 011 1v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7a1 1 0 011-1z" /></svg>
+                  Información confidencial 🔒
+                </em>
+              @endauth
+            </dd>
+          </div>
+          <div>
+            <dt class="font-medium">Teléfono</dt>
+            <dd>
+              @auth
+                {{ $persona->telefono }}
+              @else
+                <em class="italic text-gray-400 flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0-1.104-.896-2-2-2s-2 .896-2 2v2h4v-2z" /><path stroke-linecap="round" stroke-linejoin="round" d="M5 11h14a1 1 0 011 1v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7a1 1 0 011-1z" /></svg>
+                  Información confidencial 🔒
+                </em>
+              @endauth
+            </dd>
+          </div>
+          <div>
+            <dt class="font-medium">Correo electrónico</dt>
+            <dd>
+              @auth
+                {{ $persona->correo_electronico }}
+              @else
+                <em class="italic text-gray-400 flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0-1.104-.896-2-2-2s-2 .896-2 2v2h4v-2z" /><path stroke-linecap="round" stroke-linejoin="round" d="M5 11h14a1 1 0 011 1v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7a1 1 0 011-1z" /></svg>
+                  Información confidencial 🔒
+                </em>
+              @endauth
+            </dd>
+          </div>
+        </dl>
+      </section>
 
+      {{-- Resoluciones --}}
+      <section class="bg-white border rounded-lg shadow p-4">
+        <h2 class="text-lg font-semibold text-[#9D2449] mb-4">Resoluciones</h2>
 
-            <div class="px-4 sm:px-6 py-6 sm:py-12 bg-[#FAF9F7] text-gray-800">
+        @if($resolucion_prevencion)
 
-               <div class="bg-[#E7EBF0] border-l-4 border-[#E5B56F] p-4 sm:p-6 rounded shadow-sm text-sm max-w-4xl mx-auto">
-                <div class="flex flex-col sm:flex-row items-start gap-3">
-                    <div class="text-[#3C4653]">
-                        <p class="font-semibold text-[#9D2449]">Nota informativa</p>
-                        <p class="mt-1">
-                        Esta visualización confirma que el trámite con folio <strong>{{ $tramite->folio }}</strong> está registrado oficialmente en la plataforma institucional.
-                        La información mostrada es de carácter informativo y refleja el estado vigente del expediente.
-                        </p>
-                        <p class="mt-2">
-                            Para consultar detalles adicionales, como resoluciones u observaciones técnicas, acceda a su perfil y seleccione el trámite correspondiente desde su panel.
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <div class="mb-4 text-gray-800 text-sm space-y-2">
+              <p><strong>Tipo:</strong> <span class="text-[#9D2449]">{{ $datos_prevencion['tipo_resolucion'] }}</span></p>
+              <p><strong>Fecha de emisión:</strong> {{ \Carbon\Carbon::parse($datos_prevencion['fecha_emision'])->format('d/m/Y') }}</p>
+              @if(!$resolucion_prevencion->deleted_at)
+                <p class="font-semibold text-red-600">Esta resolución de prevención debe ser subsanada en 15 días hábiles.</p>
+              @else
+                <p class="font-semibold text-green-600">Prevención subsanada correctamente.</p>
+              @endif
 
-
-                <br>
-
-                {{-- Folio y estatus --}}
-               <div class="bg-[#FDF5EF] border-l-4 border-[#E5B56F] p-4 sm:p-6 mb-10 rounded shadow-sm max-w-4xl mx-auto">
-                    <p class="text-lg sm:text-xl font-bold text-[#9D2449] mb-2">
-                        Folio del Trámite: <span class="font-normal text-gray-900">{{ $tramite->folio }}</span>
-                    </p>
-                    <p class="text-sm sm:text-base text-gray-700 mb-1">
-                        Estatus actual: <strong class="text-[#9D2449]">{{ $estatus_tramite->estado }}</strong>
-                    </p>
-                    <p class="text-sm sm:text-base text-gray-500 mb-1">
-                        Fecha de inicio: {{ $tramite->tramite_inicio }}
-                    </p>
-                    <p class="text-sm sm:text-base text-gray-500 mb-4">
-                        Fecha de término: {{ $tramite->tramite_termino ?? '—' }}
-                    </p>
-
-                    <p class="text-sm sm:text-base text-gray-500 font-semibold mb-1">
-                        Descargar acuse de solicitud
-                    </p>
-                    <a href="{{ asset('storage/' . $acuse_solicitud->url) }}" target="_blank" class="text-[#9D2449] hover:underline text-sm sm:text-base block">
-                        Descargar PDF
-                    </a>
-                </div>
-
-                    <section class="mb-10 bg-white rounded-lg border shadow p-4 sm:p-6 max-w-4xl mx-auto">
-                        <h2 class="text-xl sm:text-2xl font-semibold text-[#9D2449] mb-6 flex items-center gap-2">Datos del Solicitante</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm sm:text-base">
-                            <div>
-                                <p class="font-medium text-[#9D2449] mb-1">Nombre completo</p>
-                                <p>{{ $persona->nombre }} {{ $persona->apellido_paterno }} {{ $persona->apellido_materno }}</p>
-                            </div>
-
-                            <div>
-                                <p class="font-medium text-[#9D2449] mb-1">CURP</p>
-                                <p>
-                                    @auth
-                                        {{ $persona->curp }}
-                                    @else
-                                        <em class="text-gray-500 italic" title="Este dato es privado">Información confidencial 🔒</em>
-                                    @endauth
-                                </p>
-                            </div>
-
-                            <div>
-                                <p class="font-medium text-[#9D2449] mb-1">Teléfono</p>
-                                <p>
-                                    @auth
-                                        {{ $persona->telefono }}
-                                    @else
-                                        <em class="text-gray-500 italic" title="Este dato es privado">Información confidencial 🔒</em>
-                                    @endauth
-                                </p>
-                            </div>
-
-                            <div>
-                                <p class="font-medium text-[#9D2449] mb-1">Correo electrónico</p>
-                                <p>
-                                    @auth
-                                        {{ $persona->correo_electronico }}
-                                    @else
-                                        <em class="text-gray-500 italic" title="Este dato es privado">Información confidencial 🔒</em>
-                                    @endauth
-                                </p>
-                            </div>
-                        </div>
-                    </section>
-
-                {{-- PREDIO --}}
-                <section class="mb-10 bg-[#FCFAF8] rounded-lg border shadow p-4 sm:p-6 max-w-4xl mx-auto">
-                    <h2 class="text-xl sm:text-2xl font-semibold text-[#9D2449] mb-6 flex items-center gap-2">Información del Predio</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm sm:text-base">
-                        <div>
-                            <p class="font-medium text-[#9D2449] mb-1">Clave catastral</p>
-                            <p>{{ $predio->clave_catastral }}</p>
-                        </div>
-                        <div>
-                            <p class="font-medium text-[#9D2449] mb-1">Ubicación</p>
-                            <p>{{ $domicilio_predio->calle }}, {{ $domicilio_predio->delegacion_municipio }}, {{ $domicilio_predio->estado }}, C.P. {{ $domicilio_predio->cp }}</p>
-                        </div>
-                        <div>
-                            <p class="font-medium text-[#9D2449] mb-1">Superficie</p>
-                            <p>{{ $predio->superficie_total }} m²</p>
-                        </div>
-                        <div>
-                            <p class="font-medium text-[#9D2449] mb-1">Uso actual</p>
-                            <p>{{ $uso_suelo_actual->tipo_uso }}</p>
-                        </div>
-                        <div>
-                            <p class="font-medium text-[#9D2449] mb-1">Uso solicitado</p>
-                            <p>{{ $uso_suelo_solicitado->tipo_uso }}</p>
-                        </div>
-                        <div>
-                            <p class="font-medium text-[#9D2449] mb-1">Tipo de propiedad</p>
-                            <p>{{ $tipo_propiedad->tipo_propiedad }}</p>
-                        </div>
-                    </div>
-                </section>
-
-
-                {{-- CARACTERÍSTICAS DEL PROYECTO --}}
-                <section class="mb-10 bg-white rounded-lg border shadow p-4 sm:p-6 max-w-4xl mx-auto">
-                    <h2 class="text-xl sm:text-2xl font-semibold text-[#9D2449] mb-6 flex items-center gap-2">Características del Proyecto</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm sm:text-base">
-                        <div>
-                            <p class="font-medium text-[#9D2449] mb-1">Descripción general</p>
-                            <p>{{ $tramite_proyecto->descripcion_general }}</p>
-                        </div>
-                        <div>
-                            <p class="font-medium text-[#9D2449] mb-1">Impacto estimado</p>
-                            <p>{{ $impacto_estimado->impacto }}</p>
-                        </div>
-                        <div>
-                            <p class="font-medium text-[#9D2449] mb-1">Tipo de construcción</p>
-                            <p>{{ $tipo_construccion->tipo_construccion }}</p>
-                        </div>
-                        <div>
-                            <p class="font-medium text-[#9D2449] mb-1">Niveles</p>
-                            <p>{{ $tramite_proyecto->niveles }}</p>
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <p class="font-medium text-[#9D2449] mb-1">Infraestructura seleccionada</p>
-                            <ul class="list-disc list-inside ml-4 mt-1">
-                                @foreach ($car_proyecto->infraestructuras as $infra)
-                                    <li>{{ $infra->infraestructura }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <p class="font-medium text-[#9D2449] mb-1">Plano</p>
-                            <p>{{ $plano_documento ? 'Archivo cargado: ' . $plano_documento->nombre_documento : 'No se adjuntó un plano' }}</p>
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <p class="font-medium text-[#9D2449] mb-1">Estudio de impacto ambiental</p>
-                            <p>{{ $estudio_impacto_documento ? 'Archivo cargado: ' . $estudio_impacto_documento->nombre_documento : 'No se adjuntó estudio' }}</p>
-                        </div>
-                    </div>
-                </section>
-
-                {{-- DOCUMENTOS ADJUNTOS --}}
-             <section class="mb-12 bg-[#FCFAF8] rounded-lg border shadow p-4 sm:p-6 max-w-4xl mx-auto">
-                <h2 class="text-xl sm:text-2xl font-semibold text-[#9D2449] mb-6">Documentos Adjuntos</h2>
-                <ul class="list-disc list-inside text-sm sm:text-base ml-5">
-                    @forelse ($documentos_tramite as $documento)
-                        <li class="mb-1">Archivo cargado: {{ $documento->nombre_documento }}</li>
-                    @empty
-                        <li class="italic text-gray-500">No se han adjuntado documentos</li>
-                    @endforelse
-                </ul>
-            </section>
-
-                {{-- Resoluciones --}}
-
-                @if($resoluciones)
-
-                 <section class="mb-12 bg-white rounded-lg border shadow p-4 sm:p-6 max-w-4xl mx-auto">
-                    <h2 class="text-xl sm:text-2xl font-semibold text-[#9D2449] mb-6">Resoluciones</h2>
-                    <hr class="mb-6">
-
-                    @if($resolucion_prevencion)
-                        <div class="mb-6 text-sm sm:text-base text-gray-700">
-                            @auth
-                                <p class="mb-2">Tipo de resolución: <strong class="text-[#9D2449]">{{ $datos_prevencion['tipo_resolucion'] }}</strong></p>
-                                <p class="mb-2">Fecha de emisión: {{ $datos_prevencion['fecha_emision'] }}</p>
-                                @if(!$resolucion_prevencion->deleted_at)
-                                    <p><strong>Su trámite tiene una resolución de prevención, deberá subsanarla dentro de los 15 días hábiles después de su emisión.</strong></p>
-                                @else
-                                    <p class="text-green-700 font-semibold">Prevención subsanada</p>
-                                @endif
-
-                                <h3 class="text-lg font-semibold text-[#9D2449] mt-6 mb-2">Pasos del trámite</h3>
-                                <ul class="list-disc list-inside ml-5 mb-4">
-                                    @foreach($datos_prevencion['tramite_pasos'] as $paso)
-                                        <li>
-                                            {{ $paso->paso->nombre_paso }}
-                                            @if($paso->es_valido)
-                                                <span class="text-green-600"> - Válido</span>
-                                            @else
-                                                <span class="text-red-600"> - No válido</span>
-                                            @endif
-                                            @if($paso->observaciones)
-                                                <p class="text-gray-600 mt-1">Observaciones: {{ $paso->observaciones }}</p>
-                                            @endif
-                                        </li>
-                                    @endforeach
-                                </ul>
-
-                                <p class="font-semibold">Descargar documento de resolución</p>
-                                <a href="{{ asset('storage/' . $resolucion_prevencion->documento->url) }}" class="text-[#9D2449] hover:underline" target="_blank" rel="noopener noreferrer">Descargar PDF</a>
-                            @else
-                                <div class="flex items-center gap-2 text-gray-600 italic">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0-1.104-.896-2-2-2s-2 .896-2 2v2h4v-2z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 11h14a1 1 0 011 1v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7a1 1 0 011-1z" />
-                                    </svg>
-                                    <span>Inicia sesión para ver los detalles y descargar el documento.</span>
-                                </div>
-                            @endauth
-                        </div>
-                        <hr>
-                    @endif
-
-                    @if($resolucion_f)
-                        <div class="mb-6 text-sm sm:text-base text-gray-700">
-                            @auth
-                                <p class="mb-2">Tipo de resolución: <strong class="text-[#9D2449]">{{ $resolucion_f->tipoResolucion->nombre }}</strong></p>
-                                <p class="mb-2">Fecha de emisión: {{ $resolucion_f->fecha_emision }}</p>
-                                <p class="font-semibold">Descargar documento de resolución</p>
-                                <a href="{{ asset('storage/' . $resolucion_f->documento->url) }}" class="text-[#9D2449] hover:underline" target="_blank" rel="noopener noreferrer">Descargar PDF</a>
-                            @else
-                                <div class="flex items-center gap-2 text-gray-600 italic">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0-1.104-.896-2-2-2s-2 .896-2 2v2h4v-2z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 11h14a1 1 0 011 1v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7a1 1 0 011-1z" />
-                                    </svg>
-                                    <span>Inicia sesión para ver los detalles y descargar el documento.</span>
-                                </div>
-                            @endauth
-                        </div>
-                    @endif
-                    </section>
-
-                @endif
-
-
-
-
-                {{-- ACCIONES --}}
-
-                @if($tipo_usuario)
-                <div class="flex justify-between">
-                    @if($tipo_usuario->usertype == 'user-verificador')
-                    <a href="{{ route('dashboard_verificador') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded shadow text-sm font-semibold">
-                        ← Volver al panel
-                    </a>
+              <h3 class="font-semibold mt-4 mb-2 text-[#9D2449]">Pasos del trámite</h3>
+              <ul class="list-disc list-inside text-sm">
+                @foreach($datos_prevencion['tramite_pasos'] as $paso)
+                  <li>
+                    {{ ucwords(str_replace('_', ' ', $paso->paso->nombre_paso)) }}
+                    @if($paso->es_valido)
+                      <span class="text-green-600"> - Válido</span>
                     @else
-                    <a href="{{ route('dashboard') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded shadow text-sm font-semibold">
-                        ← Volver al panel
-                    </a>
+                      <span class="text-red-600"> - No válido</span>
                     @endif
-                </div>
-                @endif
+                    @if($paso->observaciones)
+                      <p class="text-gray-600 mt-1 text-xs">Observaciones: {{ $paso->observaciones }}</p>
+                    @endif
+                  </li>
+                @endforeach
+              </ul>
+             @auth
+              <a href="{{ asset('storage/' . $resolucion_prevencion->documento->url) }}" target="_blank" rel="noopener noreferrer"
+                class="mt-4 block bg-[#9D2449] text-white text-center rounded py-2 text-sm hover:bg-[#7b1f39] transition">
+                Descargar Resolución (PDF)
+              </a>
             </div>
+          @else
+            <div class="flex items-center gap-2 text-gray-600 italic justify-center text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              </svg>
+              <p><strong>Para descargar el formato de resolución es necesario iniciar sesión en la plataforma.</strong></p>
+            </div>
+          @endauth
+        @endif
 
-        </main>
+        @if($resolucion_f)
 
-    </div>
+            <div class="mb-4 text-gray-800 text-sm space-y-2">
+              <p><strong>Tipo:</strong> <span class="text-[#9D2449]">{{ $resolucion_f->tipoResolucion->nombre }}</span></p>
+              <p><strong>Fecha de emisión:</strong> {{ \Carbon\Carbon::parse($resolucion_f->fecha_emision)->format('d/m/Y') }}</p>
+            @auth
+              <a href="{{ asset('storage/' . $resolucion_f->documento->url) }}" target="_blank" rel="noopener noreferrer"
+                class="block bg-[#9D2449] text-white text-center rounded py-2 text-sm hover:bg-[#7b1f39] transition">
+                Descargar Resolución (PDF)
+              </a>
+            </div>
+          @else
+            <div class="flex items-center gap-2 text-gray-600 italic justify-center text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              </svg>
+              <p><strong>Para descargar el formato de resolución es necesario iniciar sesión en la plataforma.</strong></p>
+            </div>
+          @endauth
+        @endif
+      </section>
 
+      {{-- Footer / Acción --}}
+      <footer class="text-center text-gray-500 text-xs mt-6">
+        <p>© {{ date('Y') }} Plataforma Institucional. Todos los derechos reservados.</p>
+      </footer>
+    </main>
+  </div>
 </x-app-layout>
