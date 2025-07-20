@@ -227,6 +227,8 @@
 
 
                 {{-- ACCIONES --}}
+
+                @if($tipo_usuario)
                 <div class="flex justify-between">
                     @if($tipo_usuario->usertype == 'user-verificador')
                     <a href="{{ route('dashboard_verificador') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded shadow text-sm font-semibold">
@@ -238,6 +240,7 @@
                     </a>
                     @endif
                 </div>
+                @endif
             </div>
 
         </main>

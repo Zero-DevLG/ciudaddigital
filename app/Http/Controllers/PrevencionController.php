@@ -86,7 +86,7 @@ class PrevencionController extends Controller
 
         $cargo = $cargo_persona_firmante->cargo;
 
-        $qrSvg = $qrService->generarQrBase64DesdeRuta('resumen-tramite.show', ['id' => $tramite->id], 150);
+        $qrBase64 = $qrService->generarQrBase64DesdeRuta('tramites.ver', ['id' => $tramite->id], 150);
 
         //Si es una prevencion, obtener las observaciones por pasos
 
@@ -104,7 +104,7 @@ class PrevencionController extends Controller
             'motivo_resolucion' => $this->motivo_resolucion,
             'persona_firmante' => $nombre_persona_firmante,
             'cargo_persona_firmante' => $cargo ? $cargo->nombre_cargo : 'No disponible',
-            'qrSvg' => $qrSvg,
+            'qrSvg' => $qrBase64,
             'pasos' => $pasos,
             'tipo_resolucion_id' => $tipo_resolucion->id,
         ];
