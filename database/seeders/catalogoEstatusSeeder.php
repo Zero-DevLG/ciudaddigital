@@ -43,6 +43,13 @@ class CatalogoEstatusSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
+            [
+                'id' => 6,
+                'estado' => 'finalizado',
+                 'created_at' => $now,
+                'updated_at' => $now,
+
+            ]
         ]);
     }
 }
