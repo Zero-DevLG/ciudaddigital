@@ -21,7 +21,7 @@ use App\Models\CatalogoDocumentos;
 use App\Models\DocumentosTemporales;
 use App\Models\PrevencionesTramite;
 use App\Models\Tramite;
-use App\Services\PdfService;
+use App\Services\PDFService;
 use App\Services\QrCodeService;
 use App\Services\FolioService;
 use Carbon\Carbon;
@@ -49,15 +49,15 @@ class TramitesController extends Controller
     public $plano_documento;
     public $estudio_impacto_documento;
     public $documentos_tramite;
-    public $pdfService;
+    public $PDFService;
     public $documentoService;
 
-    public function __construct(PdfService $pdfService, DocumentoService $documentoService)
+    public function __construct(PDFService $PDFService, DocumentoService $documentoService)
     {
 
         $this->documentoService = $documentoService;
 
-        $this->pdfService = $pdfService;
+        $this->PDFService = $PDFService;
 
     }
 
@@ -136,7 +136,7 @@ class TramitesController extends Controller
         return view('tramites.validar_tramite', compact('tramite', 'tramite_tipo', 'pasos_puntero'));
     }
 
-    public function generarPdf($id, PdfService $pdfService, QrCodeService $qrService, DocumentoService $documentoService , FolioService $folioService, FechaService $fechaService)
+    public function generarPdf($id, PDFService $PDFService, QrCodeService $qrService, DocumentoService $documentoService , FolioService $folioService, FechaService $fechaService)
     {
         // Verificar si el trámite existe
         $tramite = TramiteC::findOrFail($id);
@@ -280,7 +280,7 @@ class TramitesController extends Controller
              'tipo_documento' => '1',
         ];
 
-         $file =  $pdfService->descargarResumenTramite($data, 'resumen_tramite_'.$this->tramiteId.'.pdf');
+         $file =  $PDFService->descargarResumenTramite($data, 'resumen_tramite_'.$this->tramiteId.'.pdf');
 
 
         // return view('tramites.resumen_tramite_final', [
@@ -547,7 +547,7 @@ class TramitesController extends Controller
         }
 
 
-            $pdfFirmado = $this->pdfService->firmarResolucion(
+            $pdfFirmado = $this->PDFService->firmarResolucion(
                 $pdfPath,
                 storage_path('app/' . $cerPath),
                 storage_path('app/' . $keyPath),

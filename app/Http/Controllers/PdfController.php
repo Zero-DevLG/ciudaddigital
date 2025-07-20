@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\PdfService;
+use App\Services\PDFService;
 
 class PdfController extends Controller
 {
-    public function exportar(PdfService $pdfService)
+    public function exportar(PDFService $PDFService)
     {
         $data = [
             'nombre' => 'Luis Gabriel',

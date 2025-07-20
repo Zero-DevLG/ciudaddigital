@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CargoUsers;
 use App\Models\CatalogoResolucion;
 use App\Models\PrevencionesTramite;
-use App\Services\PdfService;
+use App\Services\PDFService;
 use App\Services\PrevencionService;
 use Illuminate\Http\Request;
 use App\Models\TramiteC;
@@ -19,7 +19,7 @@ class PrevencionController extends Controller
 {
     //
     protected $prevencionService;
-    protected $pdfService;
+    protected $PDFService;
 
     public $tramiteId;
     public $pasoId;
@@ -29,10 +29,10 @@ class PrevencionController extends Controller
     public $motivo_resolucion;
 
 
-    public function __construct(PrevencionService $prevencionService, PdfService $pdfService)
+    public function __construct(PrevencionService $prevencionService, PDFService $PDFService)
     {
         $this->prevencionService = $prevencionService;
-        $this->pdfService = $pdfService;
+        $this->PDFService = $PDFService;
     }
 
     public function guardarPrevencion(Request $request)
@@ -114,7 +114,7 @@ class PrevencionController extends Controller
 
 
 
-        $url = $this->pdfService->generarPdfVistaPreviaResolucion($data);
+        $url = $this->PDFService->generarPdfVistaPreviaResolucion($data);
 
         return response()->json([
             'success' => true,

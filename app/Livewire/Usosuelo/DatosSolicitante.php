@@ -22,7 +22,7 @@ class DatosSolicitante extends Component
     public $listeners = ['guardarDatos'];
     public $persona;
     public $tramite_estatus;
-    public bool $modo_edicion;
+    public bool $modo_edicion = true;
     public $observaciones;
     public $prevencion_paso;
 
@@ -38,7 +38,10 @@ class DatosSolicitante extends Component
             ->where('catalogo_paso_id', 1)
             ->first();
 
-        $this->observaciones = $prevencion_paso->observaciones;
+        if($prevencion_paso){
+              $this->observaciones = $prevencion_paso->observaciones;
+        }    
+        
 
 
 

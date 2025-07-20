@@ -40,7 +40,7 @@ public $estudioImpactoExistente;
      public $tramite_estatus;
     public $observaciones;
     public $prevencion_paso;
-    public $modo_edicion;
+    public $modo_edicion = true;
 
 
     public function guardarDatos(DocumentoService $documentoService) {
@@ -112,7 +112,10 @@ public $estudioImpactoExistente;
             ->first();
 
 
-          $this->observaciones = $prevencion_paso->observaciones;
+          if($prevencion_paso){
+              $this->observaciones = $prevencion_paso->observaciones ;
+        }
+        
 
 
          $estatus_tramite_f = in_array((int)$this->tramite_estatus, [1, 5]);

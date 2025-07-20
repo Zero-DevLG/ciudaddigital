@@ -48,7 +48,7 @@ class DatosPropiedad extends Component
     public $n_exterior;
     public $n_interior;
     public $cp;
-    public $modo_edicion = false;
+    public $modo_edicion = true;
     public $tramite_estatus;
     public $observaciones;
     public $prevencion_paso;
@@ -89,7 +89,11 @@ class DatosPropiedad extends Component
             ->first();
 
 
-          $this->observaciones = $prevencion_paso->observaciones;
+
+        if($prevencion_paso){
+              $this->observaciones = $prevencion_paso->observaciones ;
+        }
+        
 
 
          $estatus_tramite_f = in_array((int)$this->tramite_estatus, [1, 5]);

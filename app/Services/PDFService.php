@@ -15,7 +15,7 @@ use App\Services\DocumentoService;
 use App\Models\TramiteResoluciones;
 
 
-class PdfService
+class PDFService
 {
     /**
      * Genera y descarga el resumen del trámite como PDF.
