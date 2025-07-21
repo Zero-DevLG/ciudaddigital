@@ -203,7 +203,7 @@ class TramitesController extends Controller
 
 
           // Generar el código QR para la ruta 'resumen-tramite/{id}'
-        $qrBase64 = $qrService->generarQrBase64DesdeRuta('tramites.ver', ['id' => $id], 150);
+        $qrBase64 = $qrService->generarQrBase64DesdeRuta('tramites.verQr', ['id' => $id], 150);
 
          $tramites = DB::table('tramites_c as tc')
             ->leftJoin('tipos_tramite as tt', 'tc.tipo_tramite_id', '=', 'tt.id')

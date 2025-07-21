@@ -14,7 +14,10 @@
                         {{-- <img src="{{ asset(app(App\Services\ConfigService::class)->get('logo', 'img/default.png')) }}"
                             alt="Logo"
                             class="h-20 w-auto max-h-[80px] object-contain"> --}}
-                        <h3 style="color: white">Mi Ciudad Digital</h3>
+                        <div class="p-2 inline-block">
+                            <img src="{{ asset('img/logo_w_sx.png') }}" alt="Logo" class="">
+                        </div>
+
                     </a>
                 </div>
 

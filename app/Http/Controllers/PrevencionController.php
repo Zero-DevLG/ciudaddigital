@@ -86,7 +86,7 @@ class PrevencionController extends Controller
 
         $cargo = $cargo_persona_firmante->cargo;
 
-        $qrBase64 = $qrService->generarQrBase64DesdeRuta('tramites.ver', ['id' => $tramite->id], 150);
+        $qrBase64 = $qrService->generarQrBase64DesdeRuta('tramites.verQr', ['id' => $tramite->id], 150);
 
         //Si es una prevencion, obtener las observaciones por pasos
 

@@ -1,15 +1,26 @@
-<div class="space-y-2">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+
+<div class="space-y-1 p-2">
     <a
         href="{{ route('dashboard') }}"
         @click.prevent="loading = true; window.location.href = '{{ route('dashboard') }}'"
-        class="block px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-400 text-gray-800 dark:text-gray-200 font-semibold hover:bg-[#BC955C] hover:text-white transition-all duration-200">
-        Inicio
+        class="flex items-center gap-2 px-3 py-2 border border-1 border-gray-500 rounded-md  text-gray-500 dark:text-gray-500 text-sm hover:bg-[#F0F4F8]  transition-all duration-200"
+    >
+        <i data-lucide="home" class="w-4 h-4"></i>
+        <span>Inicio</span>
     </a>
 
     <a
         href="{{ route('tramites.usuario') }}"
         @click.prevent="loading = true; window.location.href = '{{ route('tramites.usuario') }}'"
-        class="block px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-400 text-gray-800 dark:text-gray-200 font-semibold hover:bg-[#BC955C] hover:text-white transition-all duration-200">
-        Mis Trámites
+        class="flex items-center gap-2 px-3 py-2 border border-1 border-gray-500 rounded-md  text-gray-500 dark:text-gray-500 text-sm hover:bg-[#F0F4F8]  transition-all duration-200"
+    >
+        <i data-lucide="folder" class="w-4 h-4"></i>
+        <span>Mis Trámites</span>
     </a>
 </div>
+
+<script>
+    lucide.createIcons(); // Importante: renderiza los íconos
+</script>

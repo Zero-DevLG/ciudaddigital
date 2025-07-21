@@ -40,10 +40,8 @@
 
 <body>
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
-        <div>
-            <img class="img-login"
-                src="{{ app(App\Services\ConfigService::class)->get('logo', asset('img/default.png')) }}"
-                alt="Logo">
+        <div class="p-2 inline-block">
+            <img src="{{ asset('img/logo_cd_dor.png') }}" alt="Logo">
         </div>
 
         <div class="w-full     bg-custom-gray overflow-hidden sm:rounded-lg">

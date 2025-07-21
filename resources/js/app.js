@@ -4,9 +4,15 @@ import './bootstrap';
 
 import Alpine from 'alpinejs';
 
+import Splide from '@splidejs/splide';
+import '@splidejs/splide/dist/css/splide.min.css';
+
+
 import $ from 'jquery';
 window.$ = $;
 window.jQuery = $;
+
+
 
 
 
@@ -25,6 +31,5 @@ Alpine.start();
 
 
 window.inicializarMapa = function() {
-    console.log('Mapa inicializado!');
-    // Aquí pones la lógica para crear o refrescar tu mapa, e.g. Leaflet, Google Maps, etc.
+
 }

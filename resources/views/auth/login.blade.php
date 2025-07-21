@@ -17,7 +17,7 @@
 
         .login-title {
             text-align: center;
-            color: #1e3a8a;
+            color: #A92D52;
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
         }
@@ -42,8 +42,8 @@
         input[type="email"]:focus,
         input[type="password"]:focus {
             outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 2px #93c5fd;
+            border-color: #A92D52;
+            box-shadow: 0 0 0 2px #A92D52;
         }
 
         .error {
@@ -53,7 +53,7 @@
         }
 
         .btn-submit {
-            background-color: #2563eb;
+            background-color: #A92D52;
             color: white;
             padding: 0.6rem 1.2rem;
             border: none;
@@ -65,7 +65,7 @@
         }
 
         .btn-submit:hover {
-            background-color: #1e40af;
+            background-color: #551327;
         }
 
         .link {
@@ -77,7 +77,7 @@
         }
 
         .link:hover {
-            color: #1e3a8a;
+            color: #A92D52;
         }
     </style>
 

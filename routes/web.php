@@ -73,6 +73,8 @@ Route::get('/tramites/{id}/resumen', [TramitesController::class, 'mostrarResumen
 
 Route::get('tramites/{id}/ver', [TramitesController::class, 'verTramite'])->name('tramites.ver');
 
+Route::get('tramites/{id}/verQr', [TramitesController::class, 'verTramiteQr'])->name('tramites.verQr');
+
 
 Route::post('/validaciones/guardar', [PrevencionController::class, 'guardarPrevencion'])->name('validaciones.guardar');
 
@@ -87,3 +89,5 @@ Route::post('/verificador/firmar-resolucion', [TramitesController::class, 'firma
 Route::post('/verificador/obtener-resolucion-temporal', [TramitesController::class, 'obtenerResolucionTemporal'])->name('verificador.obtener_resolucion_temporal');
 
 Route::post('/verificador/finalizar-verificacion',[TramitesController::class, 'finalizarVerificacion'])->name('verificador.finalizar_verificacion');
+
+

@@ -24,7 +24,7 @@
 
 
     {{-- Contenedor principal que ocupa toda la pantalla restante después del header --}}
-    <div style="background-color: #eae8de;" class="flex h-[calc(100vh-4rem)] overflow-hidden px-4 py-4 gap-6">
+    <div style="background-color: F0F4F8;" class="flex h-[calc(100vh-4rem)] overflow-hidden px-4 py-4 gap-6">
         {{-- Sidebar fijo al 20% --}}
         <aside class="w-1/5 min-w-[220px] max-w-xs bg-white dark:bg-gray-800 p-4 rounded-lg shadow overflow-y-auto">
             <livewire:dashboard.side-menu-user />

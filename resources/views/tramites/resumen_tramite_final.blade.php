@@ -38,6 +38,9 @@
 
                 <!-- Acciones -->
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
+
+                    {{-- <a href="{{ route('tramite.generar.pdf', ['id' => $tramite->id]) }}">test</a> --}}
+
                     <a href="{{ asset('storage/' . $file->url) }}"
                        class="inline-block px-6 py-3 bg-[#9D2449] hover:bg-[#9D2449] text-white font-medium text-sm rounded-lg shadow transition"
                        target="_blank">

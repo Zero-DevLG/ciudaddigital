@@ -116,10 +116,12 @@
             padding: 1.5rem;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             transition: transform 0.2s;
+            cursor: pointer;
         }
 
         .card:hover {
             transform: translateY(-5px);
+            background-color: #eecf6b7a;
         }
 
         .card h4 {
@@ -141,30 +143,100 @@
             margin-top: 4rem;
             border-top: 1px solid #ddd;
         }
+
+        /* Estilo personalizado del carrusel Splide */
+            .splide {
+                max-width: 100%;
+                margin: 2rem auto;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            }
+
+            .splide__slide {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: white;
+            }
+
+            .splide__slide img {
+                max-width: 100%;
+                height: auto;
+                object-fit: contain;
+                display: block;
+            }
+
+            @media (min-width: 768px) {
+                .splide {
+                    max-width: 800px;
+                }
+            }
+
+
+
     </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/css/splide.min.css">
 </head>
+
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/js/splide.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new Splide('.splide', {
+            type: 'loop',
+            perPage: 1,
+            autoplay: true,
+            pauseOnHover: false,
+            interval: 5000,
+        }).mount();
+    });
+</script>
 
 <body>
 
-    <header>
-        <h1>Mi Ciudad Digital</h1>
-        <nav>
+    <header class="flex items-center justify-between px-4 py-2 border-b shadow-sm bg-white">
+        <div class="bg-red-100 border border-red-400 p-2 inline-block">
+            <img src="{{ asset('img/logo_xs.png') }}" alt="Logo" class="h-[10px] w-[10]">
+        </div>
+
+        <nav class="flex space-x-4 text-sm font-medium text-gray-700">
             @auth
-                <a href="{{ route('dashboard') }}">Panel</a>
+                <a href="{{ route('dashboard') }}" class="hover:text-[#9D2449]">Panel</a>
             @else
-                <a href="{{ route('login') }}">Iniciar sesión</a>
-                <a href="{{ route('register') }}">Registrarse</a>
+                <a href="{{ route('login') }}" class="hover:text-[#9D2449]">Iniciar sesión</a>
+                <a href="{{ route('register') }}" class="hover:text-[#9D2449]">Registrarse</a>
             @endauth
         </nav>
     </header>
 
+
     <main>
+
 
         <section class="hero">
             <h2>Bienvenido a Mi Ciudad Digital</h2>
             <p>Realiza tus trámites gubernamentales en línea, sin filas ni esperas.</p>
             <a href="{{ route('login') }}">Empieza ahora</a>
         </section>
+
+            <section>
+                <div class="splide" aria-label="Carrusel de imágenes">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <li class="splide__slide">
+                                <img src="{{ asset('img/slide1.jpeg') }}" alt="Imagen 1">
+                            </li>
+                            <li class="splide__slide">
+                                <img src="{{ asset('img/slide2.png') }}" alt="Imagen 2">
+                            </li>
+                            <li class="splide__slide">
+                                <img src="{{ asset('img/slide3.png') }}" alt="Imagen 3">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
 
         <section class="tramites">
             <h3>Trámites disponibles</h3>
@@ -195,3 +267,4 @@
 </body>
 
 </html>
+

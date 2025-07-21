@@ -1,7 +1,7 @@
 <x-app-layout>
 
 
-    <div class="bg-[#eae8de] h-[calc(100vh-4rem)] px-4 py-4">
+    <div class="bg-[#F0F4F8] h-[calc(100vh-4rem)] px-4 py-4">
         <div class="flex h-full gap-4">
 
             {{-- Sidebar 20% --}}
